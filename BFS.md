@@ -60,9 +60,10 @@ class Solution:
         step = 0
 
         while queue:
-            # 向节点的8个相邻节点遍历
+            # 遍历当前层的所有节点
             for _ in range(len(queue)):
                 node = queue.pop(0)
+                # 处理当前节点，并向四周扩散
                 # 判断是否合法，是否达到终点
                 if node in deads: continue
                 if node == target: return step
@@ -78,6 +79,56 @@ class Solution:
                     if down not in visited:
                         queue.append(down)
                         visited.add(down)
+            step += 1
+        return -1
+```
+
+#### [773. 滑动谜题:star::star:](https://leetcode-cn.com/problems/sliding-puzzle/)
+
+![image-20211010205353892](figs/image-20211010205353892.png)
+
+```python
+class Solution:
+    def slidingPuzzle(self, board: List[List[int]]) -> int:
+        def swap(node: str, i: int, j: int):
+            tmp = list(node)
+            tmp[i], tmp[j] = tmp[j], tmp[i]
+            return ''.join(tmp)
+        
+        # 2x3的数组转换成字符串
+        s = ""
+        m, n = len(board), len(board[0])
+        for i in range(m):
+            for j in range(n):
+                s += str(board[i][j])
+        
+        # 设定好每个位置所对应的邻居索引
+        # [0 1 2]
+        # [3 4 5]
+        neighbor = [(1, 3), (0, 2, 4), (1, 5),
+                    (0, 4), (1, 3, 5), (2, 4)]
+        
+        target = "123450"
+        q = [s]
+        step = 0
+        visited = set()
+        visited.add(s)
+        while q:
+            # 向四周扩散
+            for _ in range(len(q)):
+                node = q.pop(0)
+
+                if node == target:
+                    return step
+                
+                # 查找0的位置
+                pos = node.index('0')
+                # 和邻居交换
+                for neighbor_idx in neighbor[pos]:
+                    tmp = swap(node, pos, neighbor_idx)
+                    if tmp not in visited:
+                        visited.add(tmp)
+                        q.append(tmp)
             step += 1
         return -1
 ```
