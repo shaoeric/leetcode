@@ -133,3 +133,76 @@ class Solution:
         return -1
 ```
 
+#### [429. N 叉树的层序遍历](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
+
+![image-20211011101733041](figs/image-20211011101733041.png)
+
+```python
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+"""
+
+class Solution:
+    def levelOrder(self, root: 'Node') -> List[List[int]]:
+        if root is None: return []
+        queue = [root]
+        res = []
+        while queue:
+            tmp = []
+            for _ in range(len(queue)):
+                node = queue.pop(0)
+                # 处理当前节点
+                if node:
+                    tmp.append(node.val)
+                
+                    for child in node.children:
+                        queue.append(child)
+            res.append(tmp)
+        return res
+```
+
+#### [127. 单词接龙:star::star::star:](https://leetcode-cn.com/problems/word-ladder/)
+
+![image-20211011144313674](figs/image-20211011144313674.png)
+
+```python
+class Solution:
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        def diff(s: str, t: str):
+            res = 0
+            for i in range(len(s)):
+                if s[i] != t[i]:
+                    res += 1
+            return res
+        
+        def get_available_nodes(begin: str, words: List[str], visited: set):
+            availables = []
+            for word in words:
+                if word not in visited and diff(begin, word) == 1:
+                    availables.append(word)
+            return availables
+
+        queue = [beginWord]
+        visited = set()
+        step = 1
+
+        while queue:
+            # 遍历当前层的所有节点
+            for _ in range(len(queue)):
+                # 处理当前节点，如果已经是末尾了，就返回
+                begin_node = queue.pop(0)
+                if begin_node == endWord:
+                    return step
+				# 获取当前节点的所有可以访问的子节点
+                nodes = get_available_nodes(begin_node, wordList, visited)
+                for node in nodes:
+                    queue.append(node)
+                    visited.add(node)
+            step += 1
+        return 0
+```
+
