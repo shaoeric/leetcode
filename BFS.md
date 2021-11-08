@@ -206,3 +206,133 @@ class Solution:
         return 0
 ```
 
+#### [1162. 地图分析:star::star:](https://leetcode-cn.com/problems/as-far-from-land-as-possible/)
+
+![image-20211108143458479](figs/image-20211108143458479.png)
+
+```python
+class Solution:
+    def maxDistance(self, grid: List[List[int]]) -> int:
+        # 要求找离海洋单元格到离他最近的陆地单元格距离最大的
+        # 反过来，我们将陆地单元格入队，每次扩展一步找到最近的海洋，
+        # 当我们把所有的都扩展到了，最后扩展的次数就是最大距离
+        step = -1
+        n = len(grid)
+        q = []
+        for i in range(n):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    q.append((i, j))
+        # 如果网格只有陆地或者海洋，返回
+        if len(q) == 0 or len(q) == n * n:
+            return step
+        
+        while q:
+            for _ in range(len(q)):
+                x, y = q.pop(0)
+                for xi, yj in [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]:
+                    if 0 <= xi < n and 0 <= yj < n and grid[xi][yj] == 0:
+                        q.append((xi, yj))
+                        grid[xi][yj] = -1
+            step += 1
+        
+        return step
+```
+
+#### [130. 被围绕的区域:star::star:](https://leetcode-cn.com/problems/surrounded-regions/)
+
+![image-20211108153045465](figs/image-20211108153045465.png)
+
+```python
+# BFS
+class Solution:
+    def solve(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        # 先从边缘BFS，连通的部分O变成B
+        m = len(board)
+        n = len(board[0])
+
+        def bfs(q):
+            while q:
+                for _ in range(len(q)):
+                    i, j = q.pop(0)
+                    # 处理当前节点
+                    board[i][j] = 'B'
+                    for x, y in [(i-1,j), (i, j-1), (i+1, j), (i, j+1)]:
+                        if 0<=x<m and 0<=y<n and board[x][y] == 'O':
+                            q.append((x, y))
+                        
+        q = []
+        for i in range(m):
+            if board[i][0] == 'O': q.append((i, 0))
+            if board[i][-1] == 'O': q.append((i, n-1))
+        bfs(q)
+
+        q = []
+        for i in range(n):
+            if board[0][i] == 'O': q.append((0, i))
+            if board[m-1][i] == 'O': q.append((m-1, i))
+        bfs(q)
+
+        for i in range(m):
+            for j in range(n):
+                # 将内部的O改成X填充
+                if board[i][j] == 'O':
+                    board[i][j] = 'X'
+                # 内部的B是与边界上的O相连，因此要还原为O
+                if board[i][j] == 'B':
+                    board[i][j] = 'O'
+```
+
+```python
+# DFS
+class Solution:
+    def solve(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        row = len(board)
+        col = len(board[0])
+
+        if row <= 2 or col <= 2: return
+
+        for i in range(0, len(board)):
+            self.dfs_edge(board, i, 0)
+            self.dfs_edge(board, i, len(board[0])-1)
+
+        for j in range(0, len(board[0])):
+            self.dfs_edge(board, 0, j)
+            self.dfs_edge(board, len(board)-1, j)
+            
+        for i in range(1, row-1):
+            for j in range(1, col-1):
+                if board[i][j] == 'O':
+                    self.dfs(board, i, j)
+        for i in range(row):
+            for j in range(col):
+                if board[i][j] == 'B':
+                    board[i][j] = 'O'
+
+    def dfs_edge(self, board, i, j):
+        if not 0 <= i < len(board) or not 0 <= j < len(board[0]) or board[i][j] in ('X', 'B'):
+            return
+        
+        board[i][j] = 'B'
+        self.dfs_edge(board, i + 1, j)
+        self.dfs_edge(board, i - 1, j)
+        self.dfs_edge(board, i, j + 1)
+        self.dfs_edge(board, i, j - 1)
+
+    def dfs(self, board, i, j):
+        if not 0 < i < len(board)-1 or not 0 < j < len(board[0]) -1 or board[i][j] in ('X', 'B'):
+            return
+        board[i][j] = 'X'
+        
+        self.dfs(board, i + 1, j)
+        self.dfs(board, i - 1, j)
+        self.dfs(board, i, j + 1)
+        self.dfs(board, i, j - 1)
+```
+
