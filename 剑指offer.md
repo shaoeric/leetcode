@@ -56,3 +56,60 @@ class MinStack:
         return self.b[-1]
 ```
 
+#### [剑指 Offer 10- I. 斐波那契数列](https://leetcode-cn.com/problems/fei-bo-na-qi-shu-lie-lcof/)
+
+![image-20211111192208129](figs/image-20211111192208129.png)
+
+```python
+class Solution:
+    def fib(self, n: int) -> int:
+        dp = {0: 0, 1: 1}
+        def helper(n):
+            if n <= 1: return n
+            if n in dp: return dp[n]
+
+            a = helper(n-1) % 1000000007
+            b = helper(n-2) % 1000000007
+            res = (a + b)  %  1000000007
+            dp[n-1] = a
+            dp[n-2] = b
+            dp[n] = res
+            return res
+
+        return helper(n)
+```
+
+```python
+class Solution:
+    def fib(self, n: int) -> int:
+        if n <= 1: return n
+        a, b = 0, 1
+        for _ in range(n-1):
+            a, b = b, a + b
+        return b % 1000000007
+```
+
+#### [剑指 Offer 03. 数组中重复的数字](https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof/)
+
+![image-20211111193254632](figs/image-20211111193254632.png)
+
+```python
+class Solution:
+    def findRepeatNumber(self, nums: List[int]) -> int:
+        dic = set()
+        for i in nums:
+            if i not in dic:
+                dic.add(i)
+            else:
+                return i
+```
+
+```python
+class Solution:
+    def findRepeatNumber(self, nums: List[int]) -> int:
+        nums.sort()
+        for i in range(1, len(nums)):
+            if nums[i] == nums[i-1]:
+                return nums[i]
+```
+
