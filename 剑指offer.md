@@ -358,3 +358,110 @@ class Solution:
         return False         
 ```
 
+#### [剑指 Offer 05. 替换空格](https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/)
+
+![image-20211113134402019](figs/image-20211113134402019.png)
+
+```python
+class Solution:
+    def replaceSpace(self, s: str) -> str:
+        res = ""
+        for i in s:
+            if i != ' ':
+                res += i
+            else:
+                res += '%20'
+        return res
+```
+
+#### [剑指 Offer 58 - II. 左旋转字符串](https://leetcode-cn.com/problems/zuo-xuan-zhuan-zi-fu-chuan-lcof/)
+
+![image-20211113134744892](figs/image-20211113134744892.png)
+
+#### [剑指 Offer 13. 机器人的运动范围](https://leetcode-cn.com/problems/ji-qi-ren-de-yun-dong-fan-wei-lcof/)
+
+![image-20211113141240393](figs/image-20211113141240393.png)
+
+```python
+class Solution:
+    def movingCount(self, m: int, n: int, k: int) -> int:
+        def position_sum(i):
+            res = 0
+            s = i
+            while s > 0:
+                res += s % 10
+                s = s // 10
+            return res
+        
+        self.res = 0
+        
+        def dfs(i, j):
+            if i < 0 or i >= m or j < 0 or j >= n:
+                return
+            if position_sum(i) + position_sum(j) > k:
+                return
+            if (i, j) in visited:
+                return
+			# 访问过的就不用再回头看了，所以不用回溯撤销选择
+            visited.add((i, j))
+            self.res += 1
+            for x, y in [(i-1, j), (i+1, j), (i, j-1), (i, j+1)]:
+                dfs(x, y)
+
+        
+        visited = set()
+        dfs(0, 0)
+        return self.res
+```
+
+```python
+class Solution:
+    def movingCount(self, m: int, n: int, k: int) -> int:
+        def position_sum(i):
+            res = 0
+            s = i
+            while s > 0:
+                res += s % 10
+                s = s // 10
+            return res
+        
+        res = 0
+        q = [(0, 0)]
+        visited = set()
+        # 不要求扩散数，所以while循环中不需要for。弹出节点后，先判断节点有效性，有效则访问
+        while q:
+            i, j = q.pop(0)
+            if i < 0 or i >= m or j < 0 or j >= n:
+                continue
+            if (i, j) in visited:
+                continue
+            if position_sum(i) + position_sum(j) > k:
+                continue
+            
+            visited.add((i, j))
+            res += 1
+            for x, y in [(i, j-1), (i, j+1), (i-1, j), (i+1, j)]:
+                q.append((x, y))
+                
+        return res
+```
+
+#### [剑指 Offer 07. 重建二叉树](https://leetcode-cn.com/problems/zhong-jian-er-cha-shu-lcof/)
+
+![image-20211113144705337](figs/image-20211113144705337.png)
+
+```python
+class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> TreeNode:
+        if not preorder:
+            return None
+        
+        head_val = preorder[0]
+        head = TreeNode(head_val)
+        
+        index = inorder.index(head_val)
+        head.left = self.buildTree(preorder[1: index+1], inorder[:index])
+        head.right = self.buildTree(preorder[index+1:], inorder[index+1:])
+        return head
+```
+
