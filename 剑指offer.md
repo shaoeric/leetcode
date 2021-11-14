@@ -465,3 +465,193 @@ class Solution:
         return head
 ```
 
+#### [剑指 Offer 53 - I. 在排序数组中查找数字 I](https://leetcode-cn.com/problems/zai-pai-xu-shu-zu-zhong-cha-zhao-shu-zi-lcof/)
+
+![image-20211114134140084](figs/image-20211114134140084.png)
+
+```python
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        if len(nums) == 0: return 0
+        left, right = 0, len(nums) -1
+        while left < right:
+            mid = left + (right - left) // 2
+            if nums[mid] == target:
+                right = mid
+            elif nums[mid] < target:
+                left = mid + 1
+            else:
+                right = mid
+        begin = None
+
+        if nums[left] == target:
+            begin = left
+        else:
+            return 0
+        
+        left, right = 0, len(nums) - 1
+        while left < right:
+            mid = left + (right - left + 1) // 2
+            if nums[mid] == target:
+                left = mid
+            elif nums[mid] < target:
+                left = mid
+            else:
+                right = mid - 1
+        end = left
+        return end - begin + 1
+```
+
+```python
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        n = len(nums)
+        if n == 0: return 0
+
+        left, right = 0, n - 1
+        while left + 1 < right:
+            mid = left + (right - left) //2
+            if nums[mid] == target:
+                right = mid
+            elif nums[mid] < target:
+                left = mid + 1
+            else:
+                right = mid
+        if nums[left] == target:
+            begin = left
+        elif nums[right] == target:
+            begin = right
+        else:
+            return 0
+        
+        left, right = 0, n - 1
+        while left + 1 < right:
+            mid = left + (right - left) //2
+            if nums[mid] == target:
+                left = mid
+            elif nums[mid] < target:
+                left = mid
+            else:
+                right = mid -1
+
+        if nums[right] == target:
+            end = right
+        else:
+            end = left
+        
+        return end - begin + 1
+```
+
+#### [剑指 Offer 53 - II. 0～n-1中缺失的数字](https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/)
+
+![image-20211114135346008](figs/image-20211114135346008.png)
+
+```python
+# 二分法
+class Solution:
+    def missingNumber(self, nums: List[int]) -> int:
+        left, right = 0, len(nums) - 1
+        while left <= right:
+            mid = left + (right - left) // 2
+            if nums[mid] == mid:
+                left = mid + 1
+            elif nums[mid] > mid:
+                right = mid - 1
+        return left
+```
+
+```python
+class Solution:
+    def missingNumber(self, nums: List[int]) -> int:
+        n = len(nums) + 1
+        s = (0 + n) * (n - 1) // 2
+        return s - sum(nums)
+```
+
+#### [剑指 Offer 14- I. 剪绳子](https://leetcode-cn.com/problems/jian-sheng-zi-lcof/)
+
+![image-20211114141754700](figs/image-20211114141754700.png)
+
+```python
+class Solution:
+    def cuttingRope(self, n: int) -> int:
+        dp = [0] * (n + 1)
+        
+        # dp[0] = dp[1] = 0
+        dp[2] = 1
+
+        # 从3开始，一直求到dp[n]
+        for i in range(3, n + 1):
+            # 每次剪j长度的绳子
+            for j in range(2, i):
+                # 减去第一段长度为j的绳子后，可以继续剪(dp[i-j]) 也可以不剪 (i-j)
+                dp[i] = max(dp[i], j * dp[i-j], j * (i - j))
+        return dp[-1]
+```
+
+#### [剑指 Offer 14- II. 剪绳子 II](https://leetcode-cn.com/problems/jian-sheng-zi-ii-lcof/)
+
+![image-20211114142753667](figs/image-20211114142753667.png)
+
+```python
+# 由于n太大了，用动态规划速度太慢，所以贪心算法效率高。剪绳子I也可以用贪心
+class Solution:
+    def cuttingRope(self, n: int) -> int:
+        if n < 4:
+            return n - 1
+        res = 1
+        while n > 4:
+            res = res * 3 % 1000000007
+            n -= 3
+        return res * n % 1000000007
+```
+
+#### [剑指 Offer 25. 合并两个排序的链表](https://leetcode-cn.com/problems/he-bing-liang-ge-pai-xu-de-lian-biao-lcof/)
+
+![image-20211114143511474](figs/image-20211114143511474.png)
+
+```python
+# 递归
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        def helper(l1, l2):
+            if not l1 and not l2:
+                return None
+            if not l1:
+                return l2
+            if not l2:
+                return l1
+            
+            dummy = ListNode(-1)
+            if l1.val < l2.val:
+                dummy.next = l1
+                dummy.next.next = helper(l1.next, l2)
+            else:
+                dummy.next = l2
+                dummy.next.next = helper(l1, l2.next)
+            return dummy.next
+
+        return helper(l1, l2)
+```
+
+```python
+# 迭代
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        dummy = ListNode(-1)
+        p = dummy
+        while l1 and l2:
+            if l1.val < l2.val:
+                p.next = l1
+                l1 = l1.next
+            else:
+                p.next = l2
+                l2 = l2.next
+            p = p.next
+        if l1:
+            p.next = l1
+        if l2:
+            p.next = l2
+        return dummy.next
+```
+
