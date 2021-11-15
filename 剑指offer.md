@@ -655,3 +655,65 @@ class Solution:
         return dummy.next
 ```
 
+#### [剑指 Offer 50. 第一个只出现一次的字符](https://leetcode-cn.com/problems/di-yi-ge-zhi-chu-xian-yi-ci-de-zi-fu-lcof/)
+
+![image-20211115135515322](figs/image-20211115135515322.png)
+
+```python
+class Solution:
+    def firstUniqChar(self, s: str) -> str:
+        position = {}
+        for i, c in enumerate(s):
+            if c in position:
+                position[c] = -1
+            else:
+                position[c] = i
+        
+        first = len(s)
+        for pos in position.values():
+            if pos != -1 and pos < first:
+                first = pos
+
+        return ' ' if first == len(s) else s[first]
+```
+
+#### [剑指 Offer 26. 树的子结构:star::star::star:](https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/)
+
+![image-20211115143351961](figs/image-20211115143351961.png)
+
+```python
+class Solution:
+    def isSubStructure(self, A: TreeNode, B: TreeNode) -> bool:
+		# 先序遍历A的节点
+        # 判断树A中是否包含子树B
+        def check(a, b):
+            # b越过了叶子节点，说明叶子节点匹配成功，返回True
+            if not b:
+                return True
+            # a越过叶子节点，说明叶子节点没有匹配成功，返回False
+            if not a:
+                return False
+            return a.val == b.val and check(a.left, b.left) and check(a.right, b.right)
+
+        if not A or not B:
+            return False
+        return check(A, B) or self.isSubStructure(A.left, B) or self.isSubStructure(A.right, B)
+```
+
+#### [剑指 Offer 27. 二叉树的镜像](https://leetcode-cn.com/problems/er-cha-shu-de-jing-xiang-lcof/)
+
+![image-20211115144849235](figs/image-20211115144849235.png)
+
+```python
+class Solution:
+    def mirrorTree(self, root: TreeNode) -> TreeNode:
+        if not root:
+            return None
+
+        left = self.mirrorTree(root.left)
+        right = self.mirrorTree(root.right)
+        root.left = right
+        root.right = left
+        return root
+```
+
