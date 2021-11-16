@@ -717,3 +717,147 @@ class Solution:
         return root
 ```
 
+#### [剑指 Offer 32 - I. 从上到下打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-lcof/)
+
+![image-20211116125232276](figs/image-20211116125232276.png)
+
+```python
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[int]:
+        if not root: return []
+        q = [root]
+        res = []
+        while q:
+            node = q.pop(0)
+            res.append(node.val)
+
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
+        return res
+```
+
+#### [剑指 Offer 32 - II. 从上到下打印二叉树 II](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/)
+
+![image-20211116125530698](figs/image-20211116125530698.png)
+
+```python
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        if not root: return []
+        q = [root]
+        res = []
+        while q:
+            tmp = []
+            for _ in range(len(q)):
+                node = q.pop(0)
+                tmp.append(node.val)
+
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+            res.append(tmp)
+        return res
+```
+
+#### [剑指 Offer 32 - III. 从上到下打印二叉树 III](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/)
+
+![image-20211116131237016](figs/image-20211116131237016.png)
+
+```python
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        if not root: return []
+        q = [root]
+        res = []
+
+        while q:
+            tmp = []
+  
+            for _ in range(len(q)):
+                node = q.pop(0)
+                tmp.append(node.val)
+             
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+
+            if len(res) % 2 == 0:
+                res.append(tmp)
+            else:
+                res.append(tmp[::-1])
+        return res
+```
+
+#### [剑指 Offer 21. 调整数组顺序使奇数位于偶数前面](https://leetcode-cn.com/problems/diao-zheng-shu-zu-shun-xu-shi-qi-shu-wei-yu-ou-shu-qian-mian-lcof/)
+
+![image-20211116132952455](figs/image-20211116132952455.png)
+
+```python
+class Solution:
+    def exchange(self, nums: List[int]) -> List[int]:
+        left, right = 0, len(nums)-1
+        while left < right:
+            while left < right and nums[left] % 2 == 1:
+                left += 1
+            while left < right and nums[right] % 2 == 0:
+                right -= 1
+            nums[left], nums[right] = nums[right], nums[left]
+        return nums
+```
+
+#### [剑指 Offer 15. 二进制中1的个数](https://leetcode-cn.com/problems/er-jin-zhi-zhong-1de-ge-shu-lcof/)
+
+![image-20211116133634879](figs/image-20211116133634879.png)
+
+```python
+class Solution:
+    def hammingWeight(self, n: int) -> int:
+        if n == 0: return 0
+        
+        res = 0
+        while n > 0:
+            if n % 2 == 1:
+                res += 1
+            n = n // 2
+        return res if res > 0 else 1
+```
+
+#### [剑指 Offer 29. 顺时针打印矩阵:star::star:](https://leetcode-cn.com/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/)
+
+![image-20211116135149115](figs/image-20211116135149115.png)
+
+```python
+# https://leetcode-cn.com/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/solution/shan-chu-di-yi-xing-ni-shi-zhen-xuan-zhuan-python5/
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        res = []
+        while matrix:
+            res += matrix.pop(0)
+            # 二维数组转置list(zip(*matrix))
+            matrix = list(zip(*matrix))[::-1]
+        return res
+```
+
+#### [剑指 Offer 22. 链表中倒数第k个节点](https://leetcode-cn.com/problems/lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof/)
+
+![image-20211116135949076](figs/image-20211116135949076.png)
+
+```python
+class Solution:
+    def getKthFromEnd(self, head: ListNode, k: int) -> ListNode:
+        dummy = ListNode(-1)
+        dummy.next = head
+        slow, fast = dummy, dummy
+        for _ in range(k):
+            fast = fast.next
+        
+        while fast:
+            fast = fast.next
+            slow = slow.next
+        return slow
+```
+
