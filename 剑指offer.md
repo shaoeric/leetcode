@@ -861,3 +861,30 @@ class Solution:
         return slow
 ```
 
+#### [剑指 Offer 17. 打印从1到最大的n位数](https://leetcode-cn.com/problems/da-yin-cong-1dao-zui-da-de-nwei-shu-lcof/)
+
+![image-20211117140354475](figs/image-20211117140354475.png)
+
+```python
+class Solution:
+    def printNumbers(self, n: int) -> List[int]:
+        max_val = 10 ** n
+        return [i for i in range(1, max_val)]
+```
+
+```python
+class Solution:
+    def printNumbers(self, n: int) -> List[int]:
+        res=[]
+        temp=['0']*n
+        def helper(index):
+            if index==n:
+                res.append(int(''.join(temp)))
+                return
+            for i in range(10):
+                temp[index]=chr(ord("0")+i)
+                helper(index+1)
+        helper(0)
+        return res[1:]
+```
+
