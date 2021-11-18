@@ -888,3 +888,100 @@ class Solution:
         return res[1:]
 ```
 
+#### [剑指 Offer 63. 股票的最大利润](https://leetcode-cn.com/problems/gu-piao-de-zui-da-li-run-lcof/)
+
+![image-20211118130139383](figs/image-20211118130139383.png)
+
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        n = len(prices)
+        if n <= 1: return 0
+        dp = [[0] * 2 for _ in range(n)]
+        dp[0][0] = -prices[0]
+		# 第0列为持有，第一列为卖出
+        # 持有要花钱买，所以收益为负
+        for i in range(1, n):
+            dp[i][0] = max(dp[i-1][0], -prices[i])
+            dp[i][1] = max(dp[i-1][1], dp[i-1][0] + prices[i])
+        return dp[-1][1]
+```
+
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        inf = int(1e9)
+        minprice = inf
+        maxprofit = 0
+        # 记录历史最低点，每天都考虑如果是在历史最低点买入的，今天卖出赚多少钱
+        for price in prices:
+            maxprofit = max(price - minprice, maxprofit)
+            minprice = min(price, minprice)
+        return maxprofit
+```
+
+#### [剑指 Offer 16. 数值的整数次方](https://leetcode-cn.com/problems/shu-zhi-de-zheng-shu-ci-fang-lcof/)
+
+![image-20211118132257923](figs/image-20211118132257923.png)
+
+```python
+class Solution:
+    def myPow(self, x: float, n: int) -> float:
+        def helper(x, n):
+            if n == 0:
+                return 1
+            if n == 1:
+                return x
+            
+            tmp = helper(x, n // 2)
+            if n % 2 == 0:
+                return tmp * tmp
+            else:
+                return tmp * tmp * x
+        
+        pos = (n > 0)
+        res = helper(x, abs(n))
+        return res if pos else 1 / res
+```
+
+#### [10. 正则表达式匹配:star::star::star::star:](https://leetcode-cn.com/problems/regular-expression-matching/)
+
+![image-20211118134433348](figs/image-20211118134433348.png)
+
+```python
+# https://leetcode-cn.com/problems/regular-expression-matching/solution/hen-rong-yi-li-jie-de-zheng-ze-biao-da-s-cpgp/
+class Solution:
+    def isMatch(self, s: str, p: str):
+        if not p: return not s
+        if not s and len(p) == 1: return False
+
+        m = len(s) + 1
+        n = len(p) + 1
+
+        dp = [[False for _ in range(n)] for _ in range(m)]
+
+        dp[0][0] = True
+
+        # 确定dp数组的第一行，如果遇到了*,只要判断其对应的前面两个元素的dp值
+        # 注意：我们无需判断p里面的第一个值是否为"*"，如果为"*",那肯定匹配不到为Fasle,原数组正好是Fasle，所以直接从2开始判断即可
+        for j in range(2, n):
+            if p[j-1] == '*':
+                dp[0][j] = dp[0][j - 2]
+
+        for r in range(1, m):
+            i = r - 1  # 对应s中的元素
+            for c in range(1, n):
+                j = c - 1  # 对应p中的元素
+                if s[i] == p[j] or p[j] == '.':
+                    dp[r][c] = dp[r - 1][c - 1]
+                elif p[j] == '*':
+                    if p[j - 1] == s[i] or p[j - 1] == '.':
+                        dp[r][c] = dp[r - 1][c] or dp[r][c - 2]
+                    else:
+                        dp[r][c] = dp[r][c - 2]
+                else:
+                    dp[r][c] = False
+
+        return dp[m - 1][n - 1]
+```
+
