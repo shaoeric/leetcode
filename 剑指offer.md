@@ -985,3 +985,78 @@ class Solution:
         return dp[m - 1][n - 1]
 ```
 
+#### [剑指 Offer 42. 连续子数组的最大和](https://leetcode-cn.com/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/)
+
+![image-20211121133325202](figs/image-20211121133325202.png)
+
+```python
+# 两个状态，选当前的数 和 不选当前的数
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        n = len(nums)
+        dp = [[0] * 2 for _ in range(n)]
+        # 初始化需要考虑，如果数组只有一个数组的时候，选不选第一个数最大和都是这个。
+        dp[0][0] = dp[0][1] = nums[0]
+
+        for i in range(1, n):
+            dp[i][0] = max(dp[i-1][0] + nums[i], nums[i])
+            dp[i][1] = max(dp[i-1][1], dp[i-1][0])
+        
+        return max(dp[-1])
+```
+
+```python
+# 状态压缩
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        n = len(nums)
+        dp = [0] * n
+        dp[0] = nums[0]
+        res = nums[0]
+        for i in range(1, n):
+            dp[i] = max(dp[i-1] + nums[i], nums[i])
+            res = max(res, dp[i])
+            
+        return res
+```
+
+#### [剑指 Offer 47. 礼物的最大价值](https://leetcode-cn.com/problems/li-wu-de-zui-da-jie-zhi-lcof/)
+
+![image-20211121135635603](figs/image-20211121135635603.png)
+
+```python
+# 二维空间
+class Solution:
+    def maxValue(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+        dp = [[0] * n for _ in range(m)]
+        dp[0][0] = grid[0][0]
+        for i in range(1, n):
+            dp[0][i] = dp[0][i-1] + grid[0][i]
+        for j in range(1, m):
+            dp[j][0] = dp[j-1][0] + grid[j][0]
+        
+        for i in range(1, m):
+            for j in range(1, n):
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1]) + grid[i][j]
+        return dp[-1][-1]
+```
+
+```python
+# 一维空间
+class Solution:
+    def maxValue(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+        dp = [0] * n
+        dp[0] = grid[0][0]
+        for i in range(1, n):
+            dp[i] = dp[i-1] + grid[0][i]
+        for i in range(1, m):
+            for j in range(n):
+                if j == 0:
+                    dp[j] += grid[i][j]
+                else:
+                    dp[j] = max(dp[j-1], dp[j]) + grid[i][j]
+        return dp[-1]
+```
+
