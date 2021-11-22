@@ -1060,3 +1060,77 @@ class Solution:
         return dp[-1]
 ```
 
+#### [剑指 Offer 46. 把数字翻译成字符串:star:](https://leetcode-cn.com/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/)
+
+![image-20211122142144703](figs/image-20211122142144703.png)
+
+![image-20211122142332830](figs/image-20211122142332830.png)
+
+```python
+class Solution:
+    def translateNum(self, num: int) -> int:
+        s = str(num)
+        n = len(s)
+        if n < 2:
+            return 1
+        dp = [0] * n
+        dp[0] = 1
+        dp[1] = 2 if int(s[0] + s[1]) < 26 else 1
+        for i in range(2, n):
+            dp[i] = dp[i-1] + dp[i-2] if (int(s[i-1] + s[i]) < 26 and s[i-1] != '0') else dp[i-1]
+        return dp[-1]
+```
+
+#### [剑指 Offer 48. 最长不含重复字符的子字符串:star::star:](https://leetcode-cn.com/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/)
+
+![image-20211122145113416](figs/image-20211122145113416.png)
+
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        left, right = 0, 0
+        res = 0
+        window = {}
+
+        while right < len(s):
+            if s[right] not in window:
+                window[s[right]] = 1
+            else:
+                window[s[right]] += 1
+
+            while window[s[right]] > 1:
+                window[s[left]] -= 1
+                left += 1
+            res = max(res, right - left + 1)
+            right += 1
+        return res
+```
+
+```python
+# 动态规划
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        n = len(s)
+        if n == 0: return 0
+        dic = {}
+        
+        #dp[j] 代表以字符 s[j]为结尾的 “最长不重复子字符串” 的长度。
+        dp = [0] * n
+        dp[0] = 1
+        dic[s[0]] = 0
+        res = 1
+        
+        for i in range(1, n):
+            # 如果不在字典中
+            # 如果在字典中，但是上一次出现的位置到现在的位置的距离 超出了要比较的位置，不影响结果
+            if s[i] not in dic or (i - dic[s[i]]) > dp[i-1]:
+                dp[i] = dp[i-1] + 1
+            
+            else:
+                dp[i] = i - dic[s[i]]
+            # 更新位置
+            dic[s[i]] = i
+            res = max(res, dp[i]) 
+        return res
+```
+
