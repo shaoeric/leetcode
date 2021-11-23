@@ -1134,3 +1134,53 @@ class Solution:
         return res
 ```
 
+#### [剑指 Offer 18. 删除链表的节点](https://leetcode-cn.com/problems/shan-chu-lian-biao-de-jie-dian-lcof/)
+
+![image-20211123124329539](figs/image-20211123124329539.png)
+
+```python
+class Solution:
+    def deleteNode(self, head: ListNode, val: int) -> ListNode:
+        dummy = ListNode(-1)
+        dummy.next = head
+        p = dummy
+        while p.next.val != val:
+            p = p.next
+        
+        p.next = p.next.next
+        return dummy.next
+```
+
+```python
+# 递归
+class Solution:
+    def deleteNode(self, head: ListNode, val: int) -> ListNode:
+        def helper(head):
+            if not head:
+                return head
+            if head.val == val:
+                return head.next
+            
+            head.next = helper(head.next)
+            return head
+        return helper(head)
+```
+
+#### [剑指 Offer 22. 链表中倒数第k个节点](https://leetcode-cn.com/problems/lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof/)
+
+![image-20211123125127875](figs/image-20211123125127875.png)
+
+```python
+class Solution:
+    def getKthFromEnd(self, head: ListNode, k: int) -> ListNode:
+        dummy = ListNode(-1)
+        dummy.next = head
+        fast, slow = dummy, dummy
+        for _ in range(k):
+            fast = fast.next
+        while fast:
+            fast = fast.next
+            slow = slow.next
+        return slow
+```
+
