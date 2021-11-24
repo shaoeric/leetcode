@@ -1184,3 +1184,17 @@ class Solution:
         return slow
 ```
 
+#### [剑指 Offer 52. 两个链表的第一个公共节点](https://leetcode-cn.com/problems/liang-ge-lian-biao-de-di-yi-ge-gong-gong-jie-dian-lcof/)
+
+![image-20211124194335933](figs/image-20211124194335933.png)
+
+```python
+class Solution:
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> ListNode:
+        a, b = headA, headB
+        while a != b:
+            a = a.next if a is not None else headB
+            b = b.next if b is not None else headA
+        return a
+```
+
