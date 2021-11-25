@@ -1198,3 +1198,66 @@ class Solution:
         return a
 ```
 
+#### [剑指 Offer 57. 和为s的两个数字](https://leetcode-cn.com/problems/he-wei-sde-liang-ge-shu-zi-lcof/)
+
+![image-20211125143516447](figs/image-20211125143516447.png)
+
+```python
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        n = len(nums) 
+        i, j = 0, n-1
+        while i < j:
+            s = nums[i] + nums[j]
+            if s == target:
+                return [nums[i], nums[j]]
+            elif s > target:
+                j -= 1
+            else:
+                i += 1
+```
+
+```python
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        dic = {}
+        n = len(nums) 
+        
+        for i in range(n):
+            if nums[i] not in dic:
+                dic[target - nums[i]] = i
+            else:
+                return [nums[dic[nums[i]]], nums[i]]
+```
+
+#### [剑指 Offer 58 - I. 翻转单词顺序](https://leetcode-cn.com/problems/fan-zhuan-dan-ci-shun-xu-lcof/)
+
+![image-20211125145019321](figs/image-20211125145019321.png)
+
+```python
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        stack = []
+        tmp = ''
+        for i in range(len(s)):
+            if tmp == '' and s[i] == ' ':
+                continue
+            elif s[i] != ' ':
+                tmp += s[i]
+            elif tmp != '' and s[i] == ' ':
+                stack.append(tmp)
+                tmp = ''
+        if tmp != '':
+            stack.append(tmp)
+
+        return ' '.join(stack[::-1])
+```
+
+```python
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        split = s.split(' ')
+        split = [c for c in split if c != '']
+        return ' '.join(split[::-1])
+```
+
