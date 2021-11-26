@@ -291,7 +291,7 @@ class Solution:
         return numbers[left]
 ```
 
-#### [剑指 Offer 12. 矩阵中的路径](https://leetcode-cn.com/problems/ju-zhen-zhong-de-lu-jing-lcof/)
+#### [剑指 Offer 12. 矩阵中的路径:star::star:](https://leetcode-cn.com/problems/ju-zhen-zhong-de-lu-jing-lcof/)
 
 ![image-20211112162058265](figs/image-20211112162058265.png)
 
@@ -1259,5 +1259,117 @@ class Solution:
         split = s.split(' ')
         split = [c for c in split if c != '']
         return ' '.join(split[::-1])
+```
+
+#### [剑指 Offer 34. 二叉树中和为某一值的路径](https://leetcode-cn.com/problems/er-cha-shu-zhong-he-wei-mou-yi-zhi-de-lu-jing-lcof/)
+
+![image-20211126204104397](figs/image-20211126204104397.png)
+
+```python
+class Solution:
+    def pathSum(self, root: Optional[TreeNode], targetSum: int) -> List[List[int]]:
+        path = []
+        res = []
+
+        def backtrack(path, root, targetSum):
+            if not root.left and not root.right and targetSum == 0:
+                res.append(path[:])
+                return
+            
+            if not root.left and not root.right:
+                return
+
+            # 选择左
+            if root.left:
+                backtrack(path + [root.left.val], root.left, targetSum - root.left.val)
+            
+            # 选择右
+            if root.right:
+                backtrack(path + [root.right.val], root.right, targetSum - root.right.val)
+            
+        if root is None: return []
+        backtrack(path + [root.val], root, targetSum - root.val)
+        return res
+```
+
+#### [剑指 Offer 36. 二叉搜索树与双向链表:star::star::star::star:](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/)
+
+![image-20211126211440397](figs/image-20211126211440397.png)
+
+```python
+class Solution:
+    def treeToDoublyList(self, root: 'Node') -> 'Node':
+        def helper(root):
+            if not root:
+                return None
+            
+            helper(root.left)
+
+            if self.pre:
+                self.pre.right, root.left = root, self.pre
+            else:
+                self.head = root
+            self.pre = root
+
+            helper(root.right)
+            
+        self.pre = None
+        self.head = None
+        helper(root)
+        if not self.pre: return None
+        self.pre.right, self.head.left = self.head, self.pre
+        return self.head
+```
+
+#### [剑指 Offer 54. 二叉搜索树的第k大节点](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-di-kda-jie-dian-lcof/)
+
+![image-20211126212802947](figs/image-20211126212802947.png)
+
+```python
+class Solution:
+    def kthLargest(self, root: TreeNode, k: int) -> int:
+        
+        def helper(root):
+            if not root:
+                return None
+            
+            if helper(root.right):
+                return self.pre
+            
+            self.pre = root
+            self.k += 1
+            
+            if self.k == k:
+                return self.pre
+
+            if helper(root.left):
+                return self.pre
+
+        self.pre = None
+        self.k = 0
+        helper(root)
+        return self.pre.val
+```
+
+```python
+class Solution:
+    def kthLargest(self, root: TreeNode, k: int) -> int:
+        stack = [root]
+        while stack:
+            node = stack.pop()
+            if node:
+                if node.left:
+                    stack.append(node.left)
+                
+                stack.append(node)
+                stack.append(None)
+
+                if node.right:
+                    stack.append(node.right)
+            else:
+                node = stack.pop()
+                k -= 1
+                if k == 0:
+                    return node.val
 ```
 
