@@ -1373,3 +1373,86 @@ class Solution:
                     return node.val
 ```
 
+#### [剑指 Offer 45. 把数组排成最小的数:star::star::star:](https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/)
+
+![image-20211127093019358](figs/image-20211127093019358.png)
+
+```python
+class Solution:
+    def minNumber(self, nums: List[int]) -> str:
+        # 内置排序
+        def sort_rule(x, y):
+            a, b = x + y, y + x
+            if a < b: return -1
+            elif a > b: return 1
+            else: return 0
+
+        strs = [str(i) for i in nums]
+        strs.sort(key=functools.cmp_to_key(sort_rule))
+        return ''.join(strs)
+```
+
+```python
+class Solution:
+    def minNumber(self, nums: List[int]) -> str:
+        # 快速排序
+        def quick_sort(l, r):
+            if l >= r: return
+            i, j = l, r
+            # l为pivot
+            while i < j:
+                while i < j and strs[j] + strs[l] >= strs[l] + strs[j]: j -= 1
+                while i < j and strs[i] + strs[l] <= strs[l] + strs[i]: i += 1
+                strs[i], strs[j] = strs[j], strs[i]
+            strs[i], strs[l] = strs[l], strs[i]
+            quick_sort(l, i-1)
+            quick_sort(i+1, r)
+        
+        strs = [str(i) for i in nums]
+        quick_sort(0, len(strs)-1)
+        return ''.join(strs)
+```
+
+```python
+class Solution:
+    def minNumber(self, nums: List[int]) -> str:
+        # 快速排序
+        def quick_sort(l, r):
+            if l >= r: return
+            i, j = l, r
+            # r为pivot
+            while i < j:
+                while i < j and strs[i] + strs[r] <= strs[r] + strs[i]: i += 1
+                while i < j and strs[j] + strs[r] >= strs[r] + strs[j]: j -= 1
+                
+                strs[i], strs[j] = strs[j], strs[i]
+            strs[i], strs[r] = strs[r], strs[i]
+            quick_sort(l, i-1)
+            quick_sort(i+1, r)
+        
+        strs = [str(i) for i in nums]
+        quick_sort(0, len(strs)-1)
+        return ''.join(strs)
+```
+
+#### [剑指 Offer 61. 扑克牌中的顺子:star::star:](https://leetcode-cn.com/problems/bu-ke-pai-zhong-de-shun-zi-lcof/)
+
+![image-20211127103020814](figs/image-20211127103020814.png)
+
+```python
+class Solution:
+    def isStraight(self, nums: List[int]) -> bool:
+        repeat = set()
+        mx = -1
+        mn = 14
+        for num in nums:
+            if num in repeat:
+                return False
+            elif num == 0:
+                continue
+            repeat.add(num)
+            mx = max(mx, num)
+            mn = min(mn, num)
+        return True if mx - mn < 5 else False
+```
+
