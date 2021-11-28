@@ -1456,3 +1456,159 @@ class Solution:
         return True if mx - mn < 5 else False
 ```
 
+#### [剑指 Offer 40. 最小的k个数:star::star::star::star:](https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/)
+
+![image-20211128093230162](figs/image-20211128093230162.png)
+
+```python
+class Solution:
+    def getLeastNumbers(self, arr: List[int], k: int) -> List[int]:
+        heapq.heapify(arr)
+        res = []
+        for _ in range(k):
+            res.append(heapq.heappop(arr))
+        return res
+```
+
+```python
+class Solution:
+    def getLeastNumbers(self, arr: List[int], k: int) -> List[int]:
+        def partition(l, r):
+            if l >= r: return
+            i, j = l, r
+            index = random.randint(l, r)
+            pivot = arr[index]
+            arr[index], arr[i] = arr[i], arr[index]
+            while i < j:
+                while i < j and arr[j] >= pivot:
+                    j -= 1
+                arr[i] = arr[j]
+                while i < j and arr[i] <= pivot:
+                    i += 1
+                arr[j] = arr[i]
+            arr[i] = pivot            
+            return i
+
+        def topk_split(l, r, k):
+            if l >= r: return 
+            index = partition(l, r)
+            topk_split(l, index-1, k)
+            topk_split(index+1, r, k)
+        
+        topk_split(0, len(arr)-1, k)
+        return arr[:k]
+```
+
+```python
+class Solution:
+    def getLeastNumbers(self, arr: List[int], k: int) -> List[int]:
+        def partition(l, r):
+            if l >= r: return
+            i, j = l, r
+            index = random.randint(l, r)
+            pivot = arr[index]
+            arr[index], arr[i] = arr[i], arr[index]
+            while i < j:
+                while i < j and arr[j] >= pivot:
+                    j -= 1
+                while i < j and arr[i] <= pivot:
+                    i += 1
+                arr[i], arr[j] = arr[j], arr[i]
+            arr[i], arr[l] = arr[l], arr[i]
+            return i
+
+        def topk_split(l, r, k):
+            if l >= r: return 
+            index = partition(l, r)
+            topk_split(l, index-1, k)
+            topk_split(index+1, r, k)
+        
+        topk_split(0, len(arr)-1, k)
+        return arr[:k]
+```
+
+#### [剑指 Offer 41. 数据流中的中位数:star::star::star:](https://leetcode-cn.com/problems/shu-ju-liu-zhong-de-zhong-wei-shu-lcof/)
+
+![image-20211128103536883](figs/image-20211128103536883.png)
+
+```python
+class MedianFinder:
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.A = []  # 小顶堆，保存较大的一半数据
+        self.B = []  # 大顶堆，保存较小的一半数据
+        # 取中位数时两个堆顶 可以找到中间位置
+        # heapq是小顶堆
+
+    def addNum(self, num: int) -> None:
+        # 偶数时，要给A添加。实现方法是先加到B中，然后将B的堆顶元素加到A中
+        if len(self.A) == len(self.B):
+            heapq.heappush(self.B, -num)
+            heapq.heappush(self.A, -heapq.heappop(self.B))
+        # 奇数时，反过来操作
+        else:
+            heapq.heappush(self.A, num)
+            heapq.heappush(self.B, -heapq.heappop(self.A))
+    def findMedian(self) -> float:
+        return self.A[0] if len(self.A) != len(self.B) else (self.A[0] - self.B[0]) / 2.0
+
+
+# Your MedianFinder object will be instantiated and called as such:
+# obj = MedianFinder()
+# obj.addNum(num)
+# param_2 = obj.findMedian()
+```
+
+#### [剑指 Offer 55 - I. 二叉树的深度](https://leetcode-cn.com/problems/er-cha-shu-de-shen-du-lcof/)
+
+![image-20211128103900615](figs/image-20211128103900615.png)
+
+```python
+class Solution:
+    def maxDepth(self, root: TreeNode) -> int:
+        def helper(root):
+            if not root:
+                return 0
+            left = helper(root.left)
+            right = helper(root.right)
+            return max(left, right) + 1
+        return helper(root)
+```
+
+```python
+class Solution:
+    def maxDepth(self, root: TreeNode) -> int:
+        if not root: return 0
+        q = [root]
+        res = 0
+        while q:
+            for _ in range(len(q)):
+                node = q.pop(0)
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+            res += 1
+        return res
+```
+
+#### [剑指 Offer 55 - II. 平衡二叉树](https://leetcode-cn.com/problems/ping-heng-er-cha-shu-lcof/)
+
+![image-20211128104724873](figs/image-20211128104724873.png)
+
+```python
+class Solution:
+    def isBalanced(self, root: TreeNode) -> bool:
+        def helper(root):
+            if not root:
+                return True, 0
+            
+            left_flag, left_depth = helper(root.left)
+            right_flag, right_depth = helper(root.right)
+            return left_flag and right_flag and abs(left_depth - right_depth) <= 1, max(left_depth, right_depth) + 1
+        return helper(root)[0]
+```
+
