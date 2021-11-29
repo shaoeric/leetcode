@@ -1612,3 +1612,73 @@ class Solution:
         return helper(root)[0]
 ```
 
+#### [剑指 Offer 68 - I. 二叉搜索树的最近公共祖先](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-zui-jin-gong-gong-zu-xian-lcof/)
+
+![image-20211129091033033](figs/image-20211129091033033.png)
+
+```python
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        def helper(root, p, q):
+            if not root:
+                return None
+            if root == p or root == q:
+                return root
+            if root.val > p.val and root.val > q.val:
+                return helper(root.left, p, q)
+            if root.val < p.val and root.val < q.val:
+                return helper(root.right, p, q)
+            return root
+        return helper(root, p, q)
+```
+
+```python
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        if p.val > q.val: p, q = q, p # 保证 p.val < q.val
+        while root:
+            if root.val < p.val: # p,q 都在 root 的右子树中
+                root = root.right # 遍历至右子节点
+            elif root.val > q.val: # p,q 都在 root 的左子树中
+                root = root.left # 遍历至左子节点
+            else: break
+        return root
+```
+
+#### [剑指 Offer 68 - II. 二叉树的最近公共祖先](https://leetcode-cn.com/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/)
+
+![image-20211129092304031](figs/image-20211129092304031.png)
+
+```python
+class Solution:
+    def lowestCommonAncestor(self, root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode:
+        def helper(root, p, q):
+            if not root:
+                return None
+            if root == p or root == q:
+                return root
+            left = helper(root.left, p, q)
+            right = helper(root.right, p, q)
+            if left and right:
+                return root
+            if left:
+                return left
+            if right:
+                return right
+        return helper(root, p, q)
+```
+
+#### [剑指 Offer 64. 求1+2+…+n:star::star::star:](https://leetcode-cn.com/problems/qiu-12n-lcof/)
+
+![image-20211129093158001](figs/image-20211129093158001.png)
+
+```python
+class Solution:
+    def __init__(self):
+        self.res = 0
+    def sumNums(self, n: int) -> int:
+        n > 1 and self.sumNums(n - 1)
+        self.res += n
+        return self.res
+```
+
