@@ -1682,3 +1682,39 @@ class Solution:
         return self.res
 ```
 
+#### [剑指 Offer 33. 二叉搜索树的后序遍历序列](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/)
+
+![image-20211130093327043](figs/image-20211130093327043.png)
+
+```python
+class Solution:
+    def verifyPostorder(self, postorder: List[int]) -> bool:
+        if not postorder:
+            return True
+        
+        # 像这样拆分order，结果是错误的。
+        """
+        for v in range(len(postorder)-1):
+            if v < root_val:
+                left_list.append(v)
+            elif v > root_val:
+                right_list.append(v)
+        """
+        # 应该按照二叉搜索树规则想
+        # 根>左 and 根<右
+        # 所以列表中的分布是 左 右 根
+        # 找到第一个不大于根的位置，说明左子树进行完了
+        root_val = postorder[-1]
+        for i in range(len(postorder)):
+            if postorder[i] > root_val:
+                break
+        left_list = postorder[:i]
+        right_list = postorder[i: -1]
+        for right in right_list:
+            if right < root_val: return False
+            
+        left_flag = self.verifyPostorder(left_list)
+        right_flag = self.verifyPostorder(right_list)
+        return left_flag and right_flag
+```
+
