@@ -1718,3 +1718,30 @@ class Solution:
         return left_flag and right_flag
 ```
 
+
+
+#### [剑指 Offer 65. 不用加减乘除做加法:star::star::star:](https://leetcode-cn.com/problems/bu-yong-jia-jian-cheng-chu-zuo-jia-fa-lcof/)
+
+![image-20211201094809487](figs/image-20211201094809487.png)
+
+
+
+![image-20211201094833783](figs/image-20211201094833783.png)
+
+[python解法详细解读（位运算具体过程） - 不用加减乘除做加法 - 力扣（LeetCode） (leetcode-cn.com)](https://leetcode-cn.com/problems/bu-yong-jia-jian-cheng-chu-zuo-jia-fa-lcof/solution/pythonjie-fa-xiang-xi-jie-du-wei-yun-sua-jrk8/)
+
+```python
+class Solution:
+    def add(self, a: int, b: int) -> int:
+        x = 0xffffffff
+        # 获取数的补码，用补码运算
+        a = a & x
+        b = b & x
+        while b != 0:
+            c = a & b  # 进位
+            a = a ^ b  # 本位
+            b = (c << 1) & x
+        # 如果结果是负的，需要将补码转换成原码表示
+        return a if a <= 0x7fffffff else ~(a ^ x)
+```
+
