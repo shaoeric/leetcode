@@ -1776,7 +1776,7 @@ class Solution:
         return [x, y]
 ```
 
-#### [剑指 Offer 56 - II. 数组中数字出现的次数 II](https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-ii-lcof/)
+#### [剑指 Offer 56 - II. 数组中数字出现的次数 II:star::star::star:](https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-ii-lcof/)
 
 ![image-20211202101616635](figs/image-20211202101616635.png)
 
