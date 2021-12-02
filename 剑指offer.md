@@ -1745,3 +1745,52 @@ class Solution:
         return a if a <= 0x7fffffff else ~(a ^ x)
 ```
 
+#### [剑指 Offer 56 - I. 数组中数字出现的次数:star::star::star::star:](https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof/)
+
+![image-20211202100312311](figs/image-20211202100312311.png)
+
+[🔥数组中出现1次/2次的数字——垂直方向的位运算💎 - 数组中数字出现的次数 - 力扣（LeetCode） (leetcode-cn.com)](https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof/solution/shu-zu-zhong-chu-xian-1ci-2ci-de-shu-zi-8xrsh/)
+
+![image-20211202100553576](figs/image-20211202100553576.png)
+
+```python
+class Solution:
+    def singleNumbers(self, nums: List[int]) -> List[int]:
+        # 记录全部数字的异或
+        sum = 0
+        for num in nums:
+            sum ^= num
+        # 需要对数组划分，按照某一位特征做划分
+        # 找到sum的第一位为1的位置
+        mask = 1
+        while (mask & sum) == 0:
+            mask = mask << 1
+        # 此时mask只有一个位置是1，其余位置都是0
+        x = 0
+        y = 0
+        for num in nums:
+            if (num & mask) == 0:
+                x ^= num
+            else:
+                y ^= num
+        return [x, y]
+```
+
+#### [剑指 Offer 56 - II. 数组中数字出现的次数 II](https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-ii-lcof/)
+
+![image-20211202101616635](figs/image-20211202101616635.png)
+
+![image-20211202100613149](figs/image-20211202100613149.png)
+
+```python
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        sum = 0
+        for i in range(32):
+            bit = 0
+            for num in nums:
+                bit += ((num >> i) & 1)
+            sum += (bit % 3) << i
+        return sum
+```
+
