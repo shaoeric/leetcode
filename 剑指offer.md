@@ -1794,3 +1794,59 @@ class Solution:
         return sum
 ```
 
+#### [剑指 Offer 39. 数组中出现次数超过一半的数字](https://leetcode-cn.com/problems/shu-zu-zhong-chu-xian-ci-shu-chao-guo-yi-ban-de-shu-zi-lcof/)
+
+![image-20211203103637597](figs/image-20211203103637597.png)
+
+```python
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        dic = {}
+        res = None
+        max = 0
+        for n in nums:
+            if n not in dic:
+                dic[n] = 1
+            else:
+                dic[n] += 1
+            if dic[n] > max:
+                max = dic[n]
+                res = n
+        return res
+```
+
+```python
+# 摩尔投票，结果是返回超过一半个数的数字，而不是众数。但题目给出总是存在多数元素，所以可以认为是找众数【只要众数多于总数的一半就一定能解出来  如{7, 7, 5, 5, 5, 2, 2}无法用摩尔投票解 】
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        votes = 0
+        for num in nums:
+            if votes == 0: x = num
+            if num == x:
+                votes += 1
+            else:
+                votes -= 1
+        return x
+```
+
+#### [剑指 Offer 66. 构建乘积数组:star::star::star:](https://leetcode-cn.com/problems/gou-jian-cheng-ji-shu-zu-lcof/)
+
+![image-20211203120656848](figs/image-20211203120656848.png)
+
+```python
+class Solution:
+    def constructArr(self, a: List[int]) -> List[int]:
+        # 前缀积 后缀积
+        n = len(a)
+        left = [1] * (n + 1)
+        right = [1] * (n + 1)
+        for i in range(1, n + 1):
+            left[i] = left[i-1] * a[i-1]
+            right[n - i] = right[n + 1 - i] * a[n - i]
+        
+        b = []
+        for i in range(n):
+            b.append(left[i] * right[i+1])
+        return b
+```
+
