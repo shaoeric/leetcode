@@ -568,7 +568,7 @@ class Solution:
         return s - sum(nums)
 ```
 
-#### [剑指 Offer 14- I. 剪绳子](https://leetcode-cn.com/problems/jian-sheng-zi-lcof/)
+#### [剑指 Offer 14- I. 剪绳子:star:](https://leetcode-cn.com/problems/jian-sheng-zi-lcof/)
 
 ![image-20211114141754700](figs/image-20211114141754700.png)
 
@@ -582,14 +582,14 @@ class Solution:
 
         # 从3开始，一直求到dp[n]
         for i in range(3, n + 1):
-            # 每次剪j长度的绳子
+            # 每次剪j长度的绳子,j:[2,i-1], j可以取1但是没必要，因为剪掉1剩下的是i-1，计算有重复。
             for j in range(2, i):
                 # 减去第一段长度为j的绳子后，可以继续剪(dp[i-j]) 也可以不剪 (i-j)
                 dp[i] = max(dp[i], j * dp[i-j], j * (i - j))
         return dp[-1]
 ```
 
-#### [剑指 Offer 14- II. 剪绳子 II](https://leetcode-cn.com/problems/jian-sheng-zi-ii-lcof/)
+#### [剑指 Offer 14- II. 剪绳子 II:star:](https://leetcode-cn.com/problems/jian-sheng-zi-ii-lcof/)
 
 ![image-20211114142753667](figs/image-20211114142753667.png)
 
@@ -1848,5 +1848,62 @@ class Solution:
         for i in range(n):
             b.append(left[i] * right[i+1])
         return b
+```
+
+#### [剑指 Offer 57 - II. 和为s的连续正数序列:star:](https://leetcode-cn.com/problems/he-wei-sde-lian-xu-zheng-shu-xu-lie-lcof/)
+
+![image-20211204103827436](figs/image-20211204103827436.png)
+
+```python
+class Solution:
+    def findContinuousSequence(self, target: int) -> List[List[int]]:
+        res = []
+        left, right = 1, 2
+        # 滑动窗口
+        while right <= target // 2 + 1:
+            s = (left + right) * (right - left + 1) // 2
+            if s < target:
+                right += 1
+            elif s > target:
+                left += 1
+            else:
+                res.append(list(range(left, right + 1)))
+                right += 1
+        return res
+```
+
+#### [剑指 Offer 62. 圆圈中最后剩下的数字:star:](https://leetcode-cn.com/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/)
+
+![image-20211204111259536](figs/image-20211204111259536.png)
+
+[(51条消息) 约瑟夫环——公式法（递推公式）_再难也要坚持-CSDN博客_约瑟夫环公式](https://blog.csdn.net/u011500062/article/details/72855826)
+
+![image-20211204112613191](figs/image-20211204112613191.png)
+
+
+
+$f(n, m) = [f(n - 1, m) + m] \% n$
+
+```python
+class Solution:
+    def lastRemaining(self, n: int, m: int) -> int:
+        index_tmp = 0
+        for i in range(2,n+1):
+            index_tmp = (index_tmp + m) % i
+        return index_tmp
+```
+
+```python
+sys.setrecursionlimit(100000)
+
+class Solution:
+    def lastRemaining(self, n: int, m: int) -> int:
+        return self.f(n, m)
+
+    def f(self, n, m):
+        if n == 0:
+            return 0
+        x = self.f(n - 1, m)
+        return (m + x) % n
 ```
 
