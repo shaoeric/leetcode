@@ -1907,3 +1907,23 @@ class Solution:
         return (m + x) % n
 ```
 
+#### [剑指 Offer 31. 栈的压入、弹出序列](https://leetcode-cn.com/problems/zhan-de-ya-ru-dan-chu-xu-lie-lcof/)
+
+![image-20211205100029672](figs/image-20211205100029672.png)
+
+题目指出 pushed 是 popped 的排列 。因此，无需考虑 pushedpushed 和 poppedpopped 长度不同 或 包含元素不同 的情况。如果结果为True，说明最终栈一定是空的
+
+```python
+class Solution:
+    def validateStackSequences(self, pushed: List[int], popped: List[int]) -> bool:
+        stack = []  # 借用一个栈 模拟
+        i = 0
+        for num in pushed:
+            stack.append(num)  # 入栈
+            while stack and stack[-1] == popped[i]:  # 判断栈顶元素是否等于出栈元素，需要循环出栈，因为可能会有重复元素
+                stack.pop()
+                i += 1
+        # 如果最后栈为空，说明都成功入栈出栈了
+        return not stack
+```
+
