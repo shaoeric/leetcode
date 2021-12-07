@@ -1927,3 +1927,88 @@ class Solution:
         return not stack
 ```
 
+#### [剑指 Offer 67. 把字符串转换成整数](https://leetcode-cn.com/problems/ba-zi-fu-chuan-zhuan-huan-cheng-zheng-shu-lcof/)
+
+![image-20211206111012952](figs/image-20211206111012952.png)
+
+```python
+class Solution:
+    def strToInt(self, str: str) -> int:
+        str = str.strip()
+        if not str: return 0
+        res, i, sign = 0, 1, 1
+        int_max, int_min, bndry = 2**31-1, -2**31, 2**31//10
+        if str[0] == '-': sign = -1  # 保存负号
+        elif str[0] != '+': i = 0  # 如果没无符号位，则从i=0开始数字拼接
+        for c in str[i:]:
+            if not '0' <= c <= '9': break
+            if res > bndry or res == bndry and c > '7': return int_max if sign == 1 else int_min  # 数字越界处理
+            res = 10 * res + ord(c) - ord('0')
+        return sign * res
+```
+
+#### [剑指 Offer 59 - II. 队列的最大值:star::star::star:](https://leetcode-cn.com/problems/dui-lie-de-zui-da-zhi-lcof/)
+
+![image-20211207095901413](figs/image-20211207095901413.png)
+
+```python
+import queue
+class MaxQueue:
+
+    def __init__(self):
+        self.queue = queue.Queue()
+        self.deque = queue.deque()  # 双向队列，存储递减元素
+
+    def max_value(self) -> int:
+        if self.deque:
+            return self.deque[0]
+        else:
+            return -1
+
+    def push_back(self, value: int) -> None:
+        # value 入队queue
+        # deque队尾将小于value的元素弹出，添加value
+        self.queue.put(value)
+        while self.deque and self.deque[-1] < value:
+            self.deque.pop()
+        self.deque.append(value)
+
+    def pop_front(self) -> int:
+        # 按照队列的形式，先进先出
+        if not self.deque: return -1
+        ans = self.queue.get()
+        if ans == self.deque[0]:
+            self.deque.popleft()
+        return ans
+
+
+# Your MaxQueue object will be instantiated and called as such:
+# obj = MaxQueue()
+# param_1 = obj.max_value()
+# obj.push_back(value)
+# param_3 = obj.pop_front()
+```
+
+#### [剑指 Offer 59 - I. 滑动窗口的最大值:star::star::star::star:](https://leetcode-cn.com/problems/hua-dong-chuang-kou-de-zui-da-zhi-lcof/)
+
+![image-20211207103311721](figs/image-20211207103311721.png)
+
+```python
+import queue
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        deque = queue.deque()  # 维护窗口内的递减元素的索引
+        res = []
+        for i in range(0, len(nums)):
+            # 当要进窗口的元素大于队尾元素时，把队尾元素弹出，只保留最可能成为最大值的元素索引
+            while deque and nums[i] > nums[deque[-1]]:  
+                deque.pop()
+            deque.append(i)
+
+            while i - deque[0] >= k: # 队首元素 超出窗口范围，弹出
+                deque.popleft()
+            if i >= k -1:  # 当i遍历到第一个窗口k的位置 才添加
+                res.append(nums[deque[0]])
+        return res
+```
+
