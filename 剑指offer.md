@@ -2012,3 +2012,70 @@ class Solution:
         return res
 ```
 
+#### [剑指 Offer 38. 字符串的排列:star::star:](https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof/)
+
+![image-20211208100312891](figs/image-20211208100312891.png)
+
+```python
+class Solution:
+    def permutation(self, s: str) -> List[str]:
+        res = []
+        s = sorted(list(s))
+        path = []
+        visited = [0] * len(s)
+        def backtrack(path):
+            if len(path) == len(s):
+                res.append("".join(path))
+                return
+            
+            for i in range(len(s)):
+                if visited[i] == 1: continue
+                if i > 0 and s[i] == s[i-1] and visited[i-1] == 0: continue
+                visited[i] = 1
+                backtrack(path + [s[i]])
+                visited[i] = 0
+
+        backtrack(path)
+        return res
+```
+
+#### [剑指 Offer 37. 序列化二叉树:star::star::star::star:](https://leetcode-cn.com/problems/xu-lie-hua-er-cha-shu-lcof/)
+
+![image-20211208104520653](figs/image-20211208104520653.png)
+
+```python
+class Codec:
+    def serialize(self, root):
+        if not root: return "[]"
+        queue = collections.deque()
+        queue.append(root)
+        res = []
+        while queue:
+            node = queue.popleft()
+            if node:
+                res.append(str(node.val))
+                queue.append(node.left)
+                queue.append(node.right)
+            else: res.append("null")
+        return '[' + ','.join(res) + ']'
+
+    def deserialize(self, data):
+        print(data)
+        if data == "[]": return
+        vals, i = data[1:-1].split(','), 1
+        root = TreeNode(int(vals[0]))
+        queue = collections.deque()
+        queue.append(root)
+        while queue:
+            node = queue.popleft()
+            if vals[i] != "null":
+                node.left = TreeNode(int(vals[i]))
+                queue.append(node.left)
+            i += 1
+            if vals[i] != "null":
+                node.right = TreeNode(int(vals[i]))
+                queue.append(node.right)
+            i += 1
+        return root
+```
+
