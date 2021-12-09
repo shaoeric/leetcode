@@ -985,6 +985,31 @@ class Solution:
         return dp[m - 1][n - 1]
 ```
 
+```python
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        m, n = len(s) + 1, len(p) + 1
+        dp = [[False] * n for _ in range(m)]
+        dp[0][0] = True
+        # 初始化首行
+        for j in range(2, n, 2):
+            dp[0][j] = dp[0][j - 2] and p[j - 1] == '*'
+        # 状态转移
+        for i in range(1, m):
+            for j in range(1, n):
+                if p[j - 1] == '*':
+                    if dp[i][j - 2]: dp[i][j] = True     # p字符为*时，可以把j-2字符重复0次，只看dp[i][j-2]的匹配结果
+                    # 如果p字符为*，那j-1字符与s字符相等或者j-1字符为.时，两个条件等价，都相当于p和s可以匹配
+                    elif dp[i - 1][j] and s[i - 1] == p[j - 2]: dp[i][j] = True  # 2.
+                    elif dp[i - 1][j] and p[j - 2] == '.': dp[i][j] = True       # 3.
+                else:
+                    if dp[i - 1][j - 1] and s[i - 1] == p[j - 1]: dp[i][j] = True# 1.
+                    elif dp[i - 1][j - 1] and p[j - 1] == '.': dp[i][j] = True   # 2.
+        return dp[-1][-1]
+```
+
+
+
 #### [剑指 Offer 42. 连续子数组的最大和](https://leetcode-cn.com/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/)
 
 ![image-20211121133325202](figs/image-20211121133325202.png)
@@ -2077,5 +2102,43 @@ class Codec:
                 queue.append(node.right)
             i += 1
         return root
+```
+
+#### [剑指 Offer 49. 丑数:star::star::star:](https://leetcode-cn.com/problems/chou-shu-lcof/)
+
+![image-20211209095314594](figs/image-20211209095314594.png)
+
+```python
+class Solution:
+    def nthUglyNumber(self, n: int) -> int:
+        dp = [1] * (n)
+        a, b, c = 0, 0, 0
+        for i in range(1, n):
+            na, nb, nc = dp[a] * 2, dp[b] * 3, dp[c] * 5
+            dp[i] = min(na, nb, nc)
+            # n=6时，a=3，b=2，此时a和b都满足条件，则两个索引都要前进一位
+            if dp[i] == na: a += 1
+            if dp[i] == nb: b += 1
+            if dp[i] == nc: c += 1
+        return dp[-1]
+```
+
+```python
+class Solution:
+    def nthUglyNumber(self, n: int) -> int:
+        heap = [1]
+        seen = {1}
+        factor = [2, 3, 5]
+
+        for i in range(1, n+1):
+            item = heapq.heappop(heap)
+            if i == n:
+                return item
+            else:
+                for f in factor:
+                    new_item = f * item
+                    if new_item not in seen:
+                        seen.add(new_item)
+                        heapq.heappush(heap, new_item)
 ```
 
