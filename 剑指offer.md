@@ -2142,3 +2142,40 @@ class Solution:
                         heapq.heappush(heap, new_item)
 ```
 
+#### [剑指 Offer 51. 数组中的逆序对](https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/)
+
+![image-20211210101111472](figs/image-20211210101111472.png)
+
+![image-20211210101227515](figs/image-20211210101227515.png)
+
+```python
+class Solution:
+    def reversePairs(self, nums: List[int]) -> int:
+        self.ans = 0
+        def merge_sort(nums):
+            n = len(nums)
+            if n <= 1: return nums
+            # 拆分
+            mid = n // 2
+            left = merge_sort(nums[: mid])
+            right = merge_sort(nums[mid:])
+            
+            # 合并
+            left_point, right_point, res = 0, 0, []
+            while left_point < len(left) and right_point < len(right):
+                # 不是逆序
+                if left[left_point] <= right[right_point]:
+                    res.append(left[left_point])
+                    left_point += 1
+                else:
+                    res.append(right[right_point])
+                    self.ans += len(left) - left_point
+                    right_point += 1
+            if left_point < len(left): res += left[left_point:]
+            elif right_point < len(right): res += right[right_point:]
+            return res
+        
+        merge_sort(nums)
+        return self.ans
+```
+
