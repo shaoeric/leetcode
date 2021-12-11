@@ -595,6 +595,7 @@ class Solution:
 
 ```python
 # 由于n太大了，用动态规划速度太慢，所以贪心算法效率高。剪绳子I也可以用贪心
+# https://leetcode-cn.com/problems/jian-sheng-zi-ii-lcof/solution/mian-shi-ti-14-ii-jian-sheng-zi-iitan-xin-er-fen-f/
 class Solution:
     def cuttingRope(self, n: int) -> int:
         if n < 4:
@@ -2177,5 +2178,89 @@ class Solution:
         
         merge_sort(nums)
         return self.ans
+```
+
+#### [剑指 Offer 43. 1～n 整数中 1 出现的次数](https://leetcode-cn.com/problems/1nzheng-shu-zhong-1chu-xian-de-ci-shu-lcof/)
+
+![image-20211211103542476](figs/image-20211211103542476.png)
+
+```python
+# https://leetcode-cn.com/problems/1nzheng-shu-zhong-1chu-xian-de-ci-shu-lcof/solution/1n-zheng-shu-zhong-1-chu-xian-de-ci-shu-umaj8/
+class Solution:
+    def countDigitOne(self, n: int) -> int:
+        # mulk 表示 10^k
+        # 在下面的代码中，可以发现 k 并没有被直接使用到（都是使用 10^k）
+        # 但为了让代码看起来更加直观，这里保留了 k
+        k, mulk = 0, 1
+        ans = 0
+        while n >= mulk:
+            ans += (n // (mulk * 10)) * mulk + min(max(n % (mulk * 10) - mulk + 1, 0), mulk)
+            k += 1
+            mulk *= 10
+        return ans
+```
+
+#### [剑指 Offer 44. 数字序列中某一位的数字](https://leetcode-cn.com/problems/shu-zi-xu-lie-zhong-mou-yi-wei-de-shu-zi-lcof/)
+
+![image-20211211110910714](figs/image-20211211110910714.png)
+
+```python
+class Solution:
+    def findNthDigit(self, n: int) -> int:
+        digit, start, count = 1, 1, 9
+        while n > count: # 1.
+            n -= count
+            start *= 10
+            digit += 1
+            count = 9 * start * digit
+        num = start + (n - 1) // digit # 2.
+        return int(str(num)[(n - 1) % digit]) # 3.
+```
+
+#### [剑指 Offer 20. 表示数值的字符串](https://leetcode-cn.com/problems/biao-shi-shu-zhi-de-zi-fu-chuan-lcof/)
+
+![image-20211211111825858](figs/image-20211211111825858.png)
+
+```python
+class Solution:
+    def isNumber(self, s: str) -> bool:
+        states = [
+            { ' ': 0, 's': 1, 'd': 2, '.': 4 }, # 0. start with 'blank'
+            { 'd': 2, '.': 4 } ,                # 1. 'sign' before 'e'
+            { 'd': 2, '.': 3, 'e': 5, ' ': 8 }, # 2. 'digit' before 'dot'
+            { 'd': 3, 'e': 5, ' ': 8 },         # 3. 'digit' after 'dot'
+            { 'd': 3 },                         # 4. 'digit' after 'dot' (‘blank’ before 'dot')
+            { 's': 6, 'd': 7 },                 # 5. 'e'
+            { 'd': 7 },                         # 6. 'sign' after 'e'
+            { 'd': 7, ' ': 8 },                 # 7. 'digit' after 'e'
+            { ' ': 8 }                          # 8. end with 'blank'
+        ]
+        p = 0                           # start with state 0
+        for c in s:
+            if '0' <= c <= '9': t = 'd' # digit
+            elif c in "+-": t = 's'     # sign
+            elif c in "eE": t = 'e'     # e or E
+            elif c in ". ": t = c       # dot, blank
+            else: t = '?'               # unknown
+            if t not in states[p]: return False
+            p = states[p][t]
+        return p in (2, 3, 7, 8)
+```
+
+#### [剑指 Offer 60. n个骰子的点数](https://leetcode-cn.com/problems/nge-tou-zi-de-dian-shu-lcof/)
+
+![image-20211211111936107](figs/image-20211211111936107.png)
+
+```python
+class Solution:
+    def dicesProbability(self, n: int) -> List[float]:
+        dp = [1 / 6] * 6
+        for i in range(2, n + 1):
+            tmp = [0] * (5 * i + 1)
+            for j in range(len(dp)):
+                for k in range(6):
+                    tmp[j + k] += dp[j] / 6
+            dp = tmp
+        return dp
 ```
 
