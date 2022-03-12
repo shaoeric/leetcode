@@ -1,0 +1,68 @@
+#### [29. 两数相除](https://leetcode-cn.com/problems/divide-two-integers/)
+
+<img src="figs/image-20220309152100991.png" alt="image-20220309152100991" style="zoom:67%;" />
+
+```python
+class Solution:
+    def divide(self, dividend: int, divisor: int) -> int:
+        pos = ((dividend >= 0) and (divisor > 0)) or ((dividend <= 0) and (divisor < 0))
+        res = 0
+        # 逐步递减，求商
+        dividend = abs(dividend)
+        divisor = abs(divisor)
+        while dividend >= divisor:
+            # tmp指数级翻倍
+            i = 1
+            tmp = divisor
+            while dividend >= tmp:
+                dividend -= tmp
+                res += i
+                i <<= 1
+                tmp <<= 1
+
+        if not pos:
+            res = - res
+        return res if -2**31 <= res <= 2**31-1 else 2**31-1
+```
+
+#### [91. 解码方法](https://leetcode-cn.com/problems/decode-ways/)
+
+<img src="figs/image-20220312104624147.png" alt="image-20220312104624147" style="zoom:67%;" />
+
+```python
+# 超时
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        self.res = 0
+        def backtrack(start, cur_len):
+            if cur_len == len(s):
+                self.res += 1
+                return
+            if s[start] == '0':
+                return
+            for i in range(1, 3):
+                if int(s[start: start + i]) > 26:
+                    break
+                if start + i > len(s):
+                    break
+                backtrack(start + i, cur_len + i)
+        backtrack(0, 0)
+        return self.res
+```
+
+```python
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        n = len(s)
+        dp = [0] * (n + 1)
+        dp[0] = 1
+        for i in range(1, n + 1):
+            # 情况1，只选一个字符，需要保证这个字符不是0
+            if s[i-1] !=  '0':
+                dp[i] += dp[i-1]
+            # 情况2，选两个字符
+            if i > 1 and s[i-2] != '0' and int(s[i-2: i]) <= 26:
+                dp[i] += dp[i-2]
+        return dp[-1]
+```
+
