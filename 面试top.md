@@ -66,3 +66,52 @@ class Solution:
         return dp[-1]
 ```
 
+#### [138. 复制带随机指针的链表](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
+
+<img src="figs/image-20220315190759348.png" alt="image-20220315190759348" style="zoom:67%;" />
+
+```python
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
+        self.val = int(x)
+        self.next = next
+        self.random = random
+"""
+
+class Solution:
+    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
+        nodes = {}
+
+        def helper(head):
+            if not head: return None
+            if head in nodes:
+                return nodes[head]
+            node = Node(head.val)
+            nodes[head] = node
+            node.next = helper(head.next)
+            node.random = helper(head.random)
+            return node
+        return helper(head)
+```
+
+#### [139. 单词拆分](https://leetcode-cn.com/problems/word-break/)
+
+<img src="figs/image-20220315220317216.png" alt="image-20220315220317216" style="zoom:67%;" />
+
+```python
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        m = len(s)
+        n = len(wordDict)
+        dp = [False] * (m + 1)
+        dp[0] = True
+        for i in range(1, m + 1):
+            for j in range(n):
+                if len(wordDict[j]) > i:
+                    continue
+                dp[i] = dp[i] or (dp[i-len(wordDict[j])] and s[i-len(wordDict[j]): i] == wordDict[j])
+        return dp[-1]
+```
+
