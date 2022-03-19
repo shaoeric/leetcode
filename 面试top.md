@@ -203,3 +203,53 @@ class Solution:
         return ''.join(s)
 ```
 
+#### [227. 基本计算器 II](https://leetcode-cn.com/problems/basic-calculator-ii/)
+
+<img src="figs/image-20220319145635448.png" alt="image-20220319145635448" style="zoom:67%;" />
+
+```python
+class Solution:
+    def calculate(self, s: str) -> int:
+        def calc(num_stack, op_stack):
+            op, y, x = op_stack.pop(), num_stack.pop(), num_stack.pop() if num_stack else 0
+            ans = 0
+            if op == '+': ans = x + y
+            elif op == '-': ans = x - y
+            elif op == '*': ans = x * y
+            elif op == '/': ans = x // y
+            elif op == '%': ans = x % y
+            elif op == '^': ans = math.pow(x, y)
+            num_stack.append(int(ans))
+
+        op_prio = {'+': 0, '-': 0, '*': 1, '/': 1, '%': 1, '^': 2}
+
+        s = "(" + s.replace(' ', '').replace('(-', '(0-') + ')'
+        n = len(s)
+        op_stack, num_stack = [], []
+
+        i = 0
+        while i < n:
+            c = s[i]
+            i += 1
+            if c.isdigit():
+                num = int(c)
+                while i < n and s[i].isdigit():
+                    num = num * 10 + int(s[i])
+                    i += 1
+                num_stack.append(num)
+            elif c == '(':
+                op_stack.append(c)
+            elif c == ')':
+                while op_stack and op_stack[-1] != '(':
+                    calc(num_stack, op_stack)
+                op_stack.pop()
+            else:
+                while op_stack and op_stack[-1] != '(':
+                    prev_op = op_stack[-1]
+                    if op_prio[prev_op] < op_prio[c]:
+                        break
+                    calc(num_stack, op_stack)
+                op_stack.append(c)
+        return num_stack[0]
+```
+
