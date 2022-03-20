@@ -253,3 +253,27 @@ class Solution:
         return num_stack[0]
 ```
 
+#### [239. 滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)
+
+<img src="figs/image-20220320153116935.png" alt="image-20220320153116935" style="zoom:67%;" />
+
+```python
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        q = collections.deque()
+        res = []
+
+        for i, j in enumerate(nums):
+            while q and j > nums[q[-1]]:
+                q.pop()
+            
+            if q and q[0] <= i - k:
+                q.popleft()
+            
+            q.append(i)
+
+            if i - k + 1 >= 0:
+                res.append(nums[q[0]])
+        return res
+```
+
