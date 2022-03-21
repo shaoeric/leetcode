@@ -277,3 +277,24 @@ class Solution:
         return res
 ```
 
+#### [287. 寻找重复数](https://leetcode-cn.com/problems/find-the-duplicate-number/)
+
+<img src="figs/image-20220321110400175.png" alt="image-20220321110400175" style="zoom:67%;" />
+
+```python
+class Solution:
+    def findDuplicate(self, nums: List[int]) -> int:
+        fast = slow = 0
+        while True:
+            fast = nums[nums[fast]]
+            slow = nums[slow]
+            if fast == slow:
+                break
+        fast = 0
+        while True:
+            fast = nums[fast]
+            slow = nums[slow]
+            if fast == slow:
+                return slow
+```
+
