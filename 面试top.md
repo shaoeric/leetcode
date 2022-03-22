@@ -298,3 +298,44 @@ class Solution:
                 return slow
 ```
 
+#### [350. 两个数组的交集 II](https://leetcode-cn.com/problems/intersection-of-two-arrays-ii/)
+
+<img src="figs/image-20220322104151679.png" alt="image-20220322104151679" style="zoom:67%;" />
+
+```python
+class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        nums1.sort()
+        nums2.sort()
+        left, right = 0, 0
+        res = []
+        while left < len(nums1) and right < len(nums2):
+            if nums1[left] < nums2[right]:
+                left += 1
+            elif nums1[left] == nums2[right]:
+                res.append(nums1[left])
+                left += 1
+                right += 1
+            else:
+                right += 1
+        return res
+```
+
+```python
+class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        if len(nums1) > len(nums2):
+            return self.intersect(nums2, nums1)
+        res = []
+        m = collections.Counter()
+        for n in nums1:
+            m[n] += 1
+        for n in nums2:
+            if n in m:
+                res.append(n)
+                m[n] -= 1
+                if m[n] == 0:
+                    m.pop(n)
+        return res
+```
+
