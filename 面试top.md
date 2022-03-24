@@ -339,3 +339,110 @@ class Solution:
         return res
 ```
 
+#### [329. 矩阵中的最长递增路径](https://leetcode-cn.com/problems/longest-increasing-path-in-a-matrix/)
+
+<img src="figs/image-20220323110418238.png" alt="image-20220323110418238" style="zoom:67%;" />
+
+```python
+class Solution:
+    def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
+        m, n = len(matrix), len(matrix[0])
+        res = 0
+        def dfs(x, y):
+            if mem[x][y] != 0:
+                return mem[x][y]
+            mem[x][y] += 1
+            for i, j in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+                if i < 0 or i >= m or j < 0 or j >= n:
+                    continue
+                if matrix[i][j] > matrix[x][y]:
+                    mem[x][y] = max(mem[x][y], dfs(i, j) + 1)
+            return mem[x][y]
+        
+        mem = [[0] * n for _ in range(m)]
+        for i in range(m):
+            for j in range(n):
+                res = max(res, dfs(i, j))
+        return res
+```
+
+#### [371. 两整数之和](https://leetcode-cn.com/problems/sum-of-two-integers/)
+
+<img src="figs/image-20220323111438004.png" alt="image-20220323111438004" style="zoom:67%;" />
+
+```python
+class Solution:
+    def getSum(self, a: int, b: int) -> int:
+        a &= 0xFFFFFFFF
+        b &= 0xFFFFFFFF
+        while b:
+            carry = (a & b)
+            a ^= b
+            b = (carry << 1) & 0xFFFFFFFF
+        return a if a < 0x80000000 else ~(a^0xFFFFFFFF)
+```
+
+#### [380. O(1) 时间插入、删除和获取随机元素](https://leetcode-cn.com/problems/insert-delete-getrandom-o1/)
+
+<img src="figs/image-20220324084257772.png" alt="image-20220324084257772" style="zoom:67%;" />
+
+```python
+from random import choice
+class RandomizedSet:
+
+    def __init__(self):
+        self.dic = {}
+        self.lst = []
+
+    def insert(self, val: int) -> bool:
+        if val in self.dic:
+            return False
+        self.dic[val] = len(self.lst)
+        self.lst.append(val)
+        return True
+
+    def remove(self, val: int) -> bool:
+        if val not in self.dic:
+            return False
+        idx = self.dic[val]
+        last_val = self.lst[-1]
+        self.lst[idx], self.lst[-1] = self.lst[-1], self.lst[idx]
+        self.dic[last_val] = idx
+        self.lst.pop()
+        self.dic.pop(val)
+        return True
+
+    def getRandom(self) -> int:
+        return choice(self.lst)
+```
+
+#### [378. 有序矩阵中第 K 小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/)
+
+<img src="figs/image-20220324085637117.png" alt="image-20220324085637117" style="zoom:67%;" />
+
+```python
+class Solution:
+    def kthSmallest(self, matrix: List[List[int]], k: int) -> int:
+        n = len(matrix)
+        def check(mid):
+            i, j = n - 1, 0
+            num = 0
+            while i >= 0 and j < n:
+                if matrix[i][j] <= mid:
+                    num += i + 1  # 这一列 都小于等于mid
+                    j += 1  # 指针指向下一列
+                else:
+                    i -= 1
+            return num
+        
+        left, right = matrix[0][0], matrix[-1][-1]
+        while left <= right:
+            mid = left + (right - left) // 2
+            cnt = check(mid)
+            if cnt >= k:
+                right = mid - 1
+            else:
+                left = mid + 1
+        return left
+```
+
