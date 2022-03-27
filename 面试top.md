@@ -446,3 +446,104 @@ class Solution:
         return left
 ```
 
+#### [295. 数据流的中位数](https://leetcode-cn.com/problems/find-median-from-data-stream/)
+
+<img src="figs/image-20220324105157815.png" alt="image-20220324105157815" style="zoom:67%;" />
+
+[图解 排序+二分查找+优先队列 - 数据流的中位数 - 力扣（LeetCode） (leetcode-cn.com)](https://leetcode-cn.com/problems/find-median-from-data-stream/solution/tu-jie-pai-xu-er-fen-cha-zhao-you-xian-dui-lie-by-/)
+
+```python
+class MedianFinder:
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        # 初始化大顶堆和小顶堆
+        self.max_heap = []
+        self.min_heap = []
+
+    def addNum(self, num: int) -> None:
+        if len(self.max_heap) == len(self.min_heap):# 先加到大顶堆，再把大堆顶元素加到小顶堆
+            heapq.heappush(self.min_heap, -heapq.heappushpop(self.max_heap, -num))
+        else:  # 先加到小顶堆，再把小堆顶元素加到大顶堆
+            heapq.heappush(self.max_heap, -heapq.heappushpop(self.min_heap, num))
+
+    def findMedian(self) -> float:
+        if len(self.min_heap) == len(self.max_heap):
+            return (-self.max_heap[0] + self.min_heap[0]) / 2
+        else:
+            return self.min_heap[0]
+```
+
+#### [384. 打乱数组](https://leetcode-cn.com/problems/shuffle-an-array/)
+
+<img src="figs/image-20220325091740922.png" alt="image-20220325091740922" style="zoom:67%;" />
+
+```python
+class Solution:
+
+    def __init__(self, nums: List[int]):
+        self.nums = nums
+
+    def reset(self) -> List[int]:
+        return self.nums
+
+    def shuffle(self) -> List[int]:
+        tmp = self.nums[:]
+        for i in range(len(self.nums)):
+            idx = random.randint(i, len(tmp)-1)  # randint 左闭右闭的
+            tmp[i], tmp[idx] = tmp[idx], tmp[i]
+        return tmp
+```
+
+#### [395. 至少有 K 个重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-with-at-least-k-repeating-characters/)
+
+<img src="figs/image-20220326094612780.png" alt="image-20220326094612780" style="zoom:67%;" />
+
+```python
+class Solution:
+    def longestSubstring(self, s: str, k: int) -> int:
+        if len(s) < k:
+            return 0
+        for c in set(s):
+            # c字符在s中出现的次数不超过k，说明带有c的字串都不满足题意，
+            # 因此按照c对s进行拆分 得到多个没有c的字串
+            if s.count(c) < k:
+                return max(self.longestSubstring(t, k) for t in s.split(c))
+        return len(s)
+```
+
+#### [28. 实现 strStr()](https://leetcode-cn.com/problems/implement-strstr/)
+
+<img src="figs/image-20220327093618721.png" alt="image-20220327093618721" style="zoom:67%;" />
+
+```python
+# KMP算法
+class Solution:
+    def strStr(self, haystack: str, needle: str) -> int:
+        if not needle:
+            return 0
+        m, n = len(haystack), len(needle)
+        # 求前缀表  next数组
+        nxt = [0] * n
+        j = 0
+        for i in range(1, n):
+            while j > 0 and needle[j] != needle[i]:
+                j = nxt[j-1]
+            if needle[j] == needle[i]:
+                j += 1
+            nxt[i] = j
+        
+        # 匹配
+        j = 0
+        for i in range(m):
+            while j > 0 and haystack[i] != needle[j]:
+                j = nxt[j - 1]
+            if haystack[i] == needle[j]:
+                j += 1
+            if j == n:
+                return i - n + 1
+        return -1
+```
+
