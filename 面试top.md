@@ -547,3 +547,167 @@ class Solution:
         return -1
 ```
 
+#### [297. 二叉树的序列化与反序列化](https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/)
+
+<img src="figs/image-20220328085956553.png" alt="image-20220328085956553" style="zoom:67%;" />
+
+```python
+class Codec:
+
+    def serialize(self, root):
+        """Encodes a tree to a single string.
+        
+        :type root: TreeNode
+        :rtype: str
+        """
+        if not root:
+            return 'None'
+        return '{},{},{}'.format(root.val, self.serialize(root.left), self.serialize(root.right))
+
+    def deserialize(self, data):
+        """Decodes your encoded data to tree.
+        
+        :type data: str
+        :rtype: TreeNode
+        """
+        def helper(datalist):
+            root_val = datalist.pop(0)
+            if root_val == 'None': return None
+            root = TreeNode(root_val)
+            root.left = helper(datalist)
+            root.right = helper(datalist)
+            return root
+        datalist = data.split(',')
+        return helper(datalist)
+```
+
+#### [36. 有效的数独](https://leetcode-cn.com/problems/valid-sudoku/)
+
+<img src="figs/image-20220328093126675.png" alt="image-20220328093126675" style="zoom:67%;" />
+
+```python
+from collections import defaultdict
+class Solution:
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        row, col, square = defaultdict(set), defaultdict(set), defaultdict(set)
+        for i in range(9):
+            for j in range(9):
+                val = board[i][j]
+                if val == '.':
+                    continue
+                point = i // 3 * 3 + j // 3
+                if val in row[i] or val in col[j] or val in square[point]:
+                    return False
+                row[i].add(val)
+                col[j].add(val)
+                square[point].add(val)
+        return True
+```
+
+#### [剑指 Offer 43. 1～n 整数中 1 出现的次数](https://leetcode-cn.com/problems/1nzheng-shu-zhong-1chu-xian-de-ci-shu-lcof/)
+
+![image-20220416125818060](figs/image-20220416125818060.png)
+
+```python
+class Solution:
+    def countDigitOne(self, n: int) -> int:
+
+        def helper(s):
+            # 剩余位为0或空
+            if not s:
+                return 0
+  
+            # 长度，即最高位数
+            n = len(str(s))     
+            
+            # 非0的个位数，直接返回1
+            if n == 1:
+                return 1    
+    
+            strs = str(s)
+            s0 = int(strs[0])
+
+            if s0 > 1:
+                return 10 ** (n-1) + s0 * (n-1) * 10 ** (n-2) + helper(int(strs[1:]))
+            else:
+                return (int(strs[1:])+1) + s0 * (n-1) * 10 ** (n-2) + helper(int(strs[1:]))
+            
+        return helper(n)
+```
+
+
+
+#### [402. 移掉 K 位数字](https://leetcode-cn.com/problems/remove-k-digits/)
+
+<img src="figs/image-20220419150843745.png" alt="image-20220419150843745" style="zoom:67%;" />
+
+[一招吃遍力扣四道题，妈妈再也不用担心我被套路啦～ - 移掉 K 位数字 - 力扣（LeetCode） (leetcode-cn.com)](https://leetcode-cn.com/problems/remove-k-digits/solution/yi-zhao-chi-bian-li-kou-si-dao-ti-ma-ma-zai-ye-b-5/)
+
+```python
+class Solution:
+    def removeKdigits(self, num: str, k: int) -> str:
+        remain = len(num) - k
+        stack = []
+        for c in num:
+            if not stack or c > stack[-1]:
+                stack.append(c)
+            else:
+                while k > 0 and stack and stack[-1] > c:
+                    stack.pop()
+                    k -= 1
+                stack.append(c)
+        return ''.join(stack[: remain]).lstrip('0') or '0'
+```
+
+#### [316. 去除重复字母](https://leetcode-cn.com/problems/remove-duplicate-letters/)
+
+<img src="figs/image-20220419151528403.png" alt="image-20220419151528403" style="zoom:67%;" />
+
+```python
+class Solution:
+    def removeDuplicateLetters(self, s: str) -> str:
+        stack = []
+        seen = set()
+        remain = collections.Counter(s)
+        for c in s:
+            if c not in seen:
+                while stack and c < stack[-1] and remain[stack[-1]] > 0:
+                    p = stack.pop()
+                    seen.remove(p)
+
+                stack.append(c)
+                seen.add(c)
+            remain[c] -= 1
+        return ''.join(stack)
+```
+
+#### [321. 拼接最大数](https://leetcode-cn.com/problems/create-maximum-number/)
+
+<img src="figs/image-20220419153741973.png" alt="image-20220419153741973" style="zoom:67%;" />
+
+```python
+class Solution:
+    def maxNumber(self, nums1: List[int], nums2: List[int], k: int) -> List[int]:
+        def pick_num(nums, k):
+            drop = len(nums) - k
+            stack = []
+            for c in nums:
+                while drop > 0 and stack and c > stack[-1]:
+                    stack.pop()
+                    drop -= 1
+                stack.append(c)
+            return stack[:k]
+        
+        def merge(a, b):
+            res = []
+            while a or b:
+                bigger = a if a > b else b
+                res.append(bigger[0])
+                bigger.pop(0)
+            return res
+        
+        return max(
+            merge(pick_num(nums1, i), pick_num(nums2, k-i)) for i in range(k+1) if i <= len(nums1) and k - i <= len(nums2)
+        )
+```
+
