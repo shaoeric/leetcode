@@ -711,3 +711,24 @@ class Solution:
         )
 ```
 
+#### [59. 螺旋矩阵 II](https://leetcode-cn.com/problems/spiral-matrix-ii/)
+
+<img src="figs/image-20220419203520931.png" alt="image-20220419203520931" style="zoom:67%;" />
+
+```python
+class Solution:
+    def generateMatrix(self, n: int) -> List[List[int]]:
+        dirs = ((0, 1), (1, 0), (0, -1), (-1, 0))
+        mat = [[0] * n for _ in range(n)]
+        row, col, dir_idx = 0, 0, 0
+        for i in range(n * n):
+            mat[row][col] = i + 1
+            dx, dy = dirs[dir_idx]
+            r, c = row + dx, col + dy
+            if r < 0 or r >= n or c < 0 or c >= n or mat[r][c] > 0:
+                dir_idx = (dir_idx + 1) % 4
+                dx, dy = dirs[dir_idx]
+            row, col = row + dx, col + dy
+        return mat
+```
+
