@@ -277,6 +277,39 @@ class Solution:
         return res
 ```
 
+```python
+class Queue:
+    def __init__(self):
+        self.q = collections.deque()
+    
+    def pop(self, value):
+        if self.q and self.q[0] == value:
+            self.q.popleft()
+
+    def push(self, value):
+        while self.q and value > self.q[-1]:
+            self.q.pop()
+        self.q.append(value)
+
+    def front(self):
+        return self.q[0]
+
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        q = Queue()
+        res = []
+        for i in range(k):
+            q.push(nums[i])
+        res.append(q.front())
+        for i in range(k, len(nums)):
+            q.pop(nums[i-k])
+            q.push(nums[i])
+            res.append(q.front())
+        return res
+```
+
+
+
 #### [287. 寻找重复数](https://leetcode-cn.com/problems/find-the-duplicate-number/)
 
 <img src="figs/image-20220321110400175.png" alt="image-20220321110400175" style="zoom:67%;" />
@@ -730,5 +763,62 @@ class Solution:
                 dx, dy = dirs[dir_idx]
             row, col = row + dx, col + dy
         return mat
+```
+
+#### [450. 删除二叉搜索树中的节点](https://leetcode-cn.com/problems/delete-node-in-a-bst/)
+
+<img src="figs/image-20220421084251534.png" alt="image-20220421084251534" style="zoom:67%;" />
+
+```python
+class Solution:
+    def deleteNode(self, root: Optional[TreeNode], key: int) -> Optional[TreeNode]:
+        def helper(root, key):
+            if not root:
+                return None
+            if root.val == key:
+                if not root.left and not root.right:
+                    del root
+                    return None
+                elif not root.left and root.right:
+                    root = root.right
+                    return root
+                elif root.left and not root.right:
+                    root = root.left
+                    return root
+                else:
+                    t = root.right
+                    while t.left:
+                        t = t.left
+                    t.left = root.left
+                    root = root.right
+                    return root
+            elif root.val > key:
+                root.left = helper(root.left, key)
+            else:
+                root.right = helper(root.right, key)
+            return root
+        return helper(root, key)
+```
+
+#### [189. 轮转数组](https://leetcode-cn.com/problems/rotate-array/)
+
+<img src="figs/image-20220421085932712.png" alt="image-20220421085932712" style="zoom:67%;" />
+
+```python
+class Solution:
+    def rotate(self, nums: List[int], k: int) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        def reverse(left, right):
+            while left < right:
+                nums[left], nums[right] = nums[right], nums[left]
+                left += 1
+                right -= 1
+        n = len(nums)
+        k = k % n
+        reverse(0, n-1)
+        reverse(0, k-1)
+        reverse(k, n-1)
 ```
 
