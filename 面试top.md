@@ -822,3 +822,66 @@ class Solution:
         reverse(k, n-1)
 ```
 
+#### [25. K 个一组翻转链表](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
+
+<img src="figs/image-20220421222411235.png" alt="image-20220421222411235" style="zoom:67%;" />
+
+```python
+class Solution:
+    def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+        def reverse(head, tail):
+            pre, cur = None, head
+            while cur != tail:
+                nxt = cur.next
+                cur.next = pre
+                pre = cur
+                cur = nxt
+            cur.next = pre
+            return tail, head
+        
+        dummy = ListNode()
+        dummy.next = head
+        pre, tail = dummy, dummy
+        for _ in range(k):
+            tail = tail.next
+            if not tail:
+                return dummy.next
+        nxt = tail.next
+        head, tail = reverse(head, tail)
+        pre.next = head
+        tail.next = self.reverseKGroup(nxt, k)
+        return dummy.next
+```
+
+```python
+class Solution:
+    def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+        def reverse(head, tail):
+            pre, cur = None, head
+            while cur != tail:
+                nxt = cur.next
+                cur.next = pre
+                pre = cur
+                cur = nxt
+            cur.next = pre
+            return tail, head
+
+        dummy = ListNode()
+        dummy.next = head
+        pre = dummy
+        while head:
+            tail = pre
+            for _ in range(k):
+                tail = tail.next
+                if not tail:
+                    return dummy.next
+            nxt = tail.next
+            head, tail = reverse(head, tail)
+            pre.next = head
+            tail.next = nxt
+            pre = tail
+            head = nxt
+            
+        return dummy.next
+```
+
