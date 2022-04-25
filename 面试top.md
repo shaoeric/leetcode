@@ -205,7 +205,7 @@ class Solution:
 
 #### [227. 基本计算器 II](https://leetcode-cn.com/problems/basic-calculator-ii/)
 
-<img src="figs/image-20220319145635448.png" alt="image-20220319145635448" style="zoom:67%;" />
+<img src="figs/image-20220319145635448.png" alt="image-20220319145635448" style="zoom: 80%;" />
 
 ```python
 class Solution:
@@ -911,5 +911,152 @@ class Solution:
             return helper(nums1, nums2, k1)
         else:
             return (helper(nums1, nums2, k1) + helper(nums1, nums2, k2)) / 2
+```
+
+#### [41. 缺失的第一个正数](https://leetcode-cn.com/problems/first-missing-positive/)
+
+![image-20220424105619405](figs/image-20220424105619405.png)
+
+```python
+class Solution:
+    def firstMissingPositive(self, nums: List[int]) -> int:
+        n = len(nums)
+        for i in range(n):
+            while 1 <= nums[i] <= n and nums[nums[i] - 1] != nums[i]:
+                nums[nums[i] - 1], nums[i] = nums[i], nums[nums[i] - 1]
+
+        for i in range(n):
+            if i + 1 != nums[i]:
+                return i + 1
+        return n + 1
+```
+
+#### [442. 数组中重复的数据](https://leetcode-cn.com/problems/find-all-duplicates-in-an-array/)
+
+![image-20220424105708130](figs/image-20220424105708130.png)
+
+```python
+class Solution:
+    def findDuplicates(self, nums: List[int]) -> List[int]:
+        def swap(i, j):
+            tmp = nums[i]
+            nums[i] = nums[j]
+            nums[j] = tmp
+
+        n = len(nums)
+        for i in range(n):
+            while 1 <= nums[i] <= n and nums[i] != nums[nums[i] - 1]:
+                swap(i, nums[i] - 1)
+        res = []
+        for i in range(n):
+            if nums[i] != i + 1:
+                res.append(nums[i])
+        res.sort()
+        return res
+```
+
+#### [448. 找到所有数组中消失的数字](https://leetcode-cn.com/problems/find-all-numbers-disappeared-in-an-array/)
+
+![image-20220424105741793](figs/image-20220424105741793.png)
+
+```python
+class Solution:
+    def findDisappearedNumbers(self, nums: List[int]) -> List[int]:
+        def swap(i, j):
+            tmp = nums[i]
+            nums[i] = nums[j]
+            nums[j] = tmp
+
+        n = len(nums)
+        for i in range(n):
+            while nums[i] != nums[nums[i] - 1]:
+                swap(i, nums[i] - 1)
+        res = []
+        for i in range(n):
+            if nums[i] != i + 1:
+                res.append(i+1)
+        return res
+```
+
+#### [剑指 Offer 51. 数组中的逆序对](https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/)
+
+![image-20220424125225256](figs/image-20220424125225256.png)
+
+```python
+class Solution:
+    def reversePairs(self, nums: List[int]) -> int:
+        self.res = 0
+        def merge_sort(nums, left, right):
+            if left >= right:
+                return
+            mid = left + (right - left) // 2
+            merge_sort(nums, left, mid)
+            merge_sort(nums, mid + 1, right)
+            tmp = []
+
+            i, j = left, mid + 1
+            while i <= mid and j <= right:
+                if nums[i] <= nums[j]:
+                    tmp.append(nums[i])
+                    i += 1
+                else:
+                    tmp.append(nums[j])
+                    self.res += mid - i + 1
+                    j += 1
+            while i <= mid:
+                tmp.append(nums[i])
+                i += 1
+            while j <= right:
+                tmp.append(nums[j])
+                j += 1
+            nums[left: right + 1] = tmp
+        
+        merge_sort(nums, 0, len(nums) - 1)
+        return self.res
+```
+
+#### [394. 字符串解码](https://leetcode-cn.com/problems/decode-string/)
+
+![image-20220424130923990](figs/image-20220424130923990.png)
+
+```python
+class Solution:
+    def decodeString(self, s: str) -> str:
+        def dfs(i):
+            res, num = "", 0
+            while i < len(s):
+                if '0' <= s[i] <= '9':
+                    num = 10 * num + int(s[i])
+                elif s[i] == '[':
+                    i, tmp = dfs(i + 1)
+                    res += num * tmp
+                    num = 0
+                elif s[i] == ']':
+                    return i, res
+                else:
+                    res += s[i]
+                i += 1
+            return i, res
+        return dfs(0)[1]
+```
+
+```python
+class Solution:
+    def decodeString(self, s: str) -> str:
+        stack = []
+        res = ''
+        num = 0
+        for c in s:
+            if '0' <= c <= '9':
+                num = 10 * num + int(c)
+            elif c == '[':
+                stack.append((num, res))
+                res, num = '', 0
+            elif c == ']':
+                cur_num, last_res = stack.pop()
+                res = last_res + cur_num * res
+            else:
+                res += c
+        return res
 ```
 
