@@ -668,11 +668,9 @@ class Solution:
         return helper(n)
 ```
 
-
-
 #### [402. 移掉 K 位数字](https://leetcode-cn.com/problems/remove-k-digits/)
 
-<img src="figs/image-20220419150843745.png" alt="image-20220419150843745" style="zoom:67%;" />
+<img src="figs/image-20220419150843745.png" alt="image-20220419150843745" style="zoom: 80%;" />
 
 [一招吃遍力扣四道题，妈妈再也不用担心我被套路啦～ - 移掉 K 位数字 - 力扣（LeetCode） (leetcode-cn.com)](https://leetcode-cn.com/problems/remove-k-digits/solution/yi-zhao-chi-bian-li-kou-si-dao-ti-ma-ma-zai-ye-b-5/)
 
@@ -716,7 +714,7 @@ class Solution:
 
 #### [321. 拼接最大数](https://leetcode-cn.com/problems/create-maximum-number/)
 
-<img src="figs/image-20220419153741973.png" alt="image-20220419153741973" style="zoom:67%;" />
+<img src="figs/image-20220419153741973.png" alt="image-20220419153741973" style="zoom: 80%;" />
 
 ```python
 class Solution:
@@ -1058,5 +1056,52 @@ class Solution:
             else:
                 res += c
         return res
+```
+
+#### [470. 用 Rand7() 实现 Rand10()](https://leetcode-cn.com/problems/implement-rand10-using-rand7/)
+
+<img src="figs/image-20220503092625790.png" alt="image-20220503092625790" style="zoom:67%;" />
+
+```python
+# The rand7() API is already defined for you.
+# def rand7():
+# @return a random integer in the range 1 to 7
+
+class Solution:
+    def rand10(self):
+        """
+        :rtype: int
+        """
+        while True:
+            n = 7 * (rand7() - 1) + (rand7() - 1)
+            if 1 <= n <= 40:
+                return n % 10 + 1
+```
+
+#### [165. 比较版本号](https://leetcode-cn.com/problems/compare-version-numbers/)
+
+<img src="figs/image-20220503103216678.png" alt="image-20220503103216678" style="zoom:67%;" />
+
+```python
+class Solution:
+    def compareVersion(self, version1: str, version2: str) -> int:
+        i, j = 0, 0
+        while i < len(version1) or j < len(version2):
+            x = 0
+            while i < len(version1) and version1[i] != '.':
+                x = x * 10 + int(version1[i])
+                i += 1
+            i += 1
+
+            y = 0
+            while j < len(version2) and version2[j] != '.':
+                y = y * 10 + int(version2[j])
+                j += 1
+            j += 1
+
+
+            if x > y: return 1
+            elif x < y: return -1
+        return 0
 ```
 
