@@ -1105,3 +1105,29 @@ class Solution:
         return 0
 ```
 
+#### [662. 二叉树最大宽度](https://leetcode-cn.com/problems/maximum-width-of-binary-tree/)
+
+<img src="figs/image-20220504152106692.png" alt="image-20220504152106692" style="zoom:67%;" />
+
+```python
+class Solution:
+    def widthOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+        q = collections.deque()
+        q.append((root, 0))
+        res = 0
+        while q:
+            start, end = None, None
+            for _ in range(len(q)):
+                node, idx = q.popleft()
+                if start is None: start = idx
+                end = idx
+                if node.left:
+                    q.append((node.left, 2 * idx + 1))
+                if node.right:
+                    q.append((node.right, 2 * idx + 2))
+            res = max(res, end - start + 1)
+        return res
+```
+
