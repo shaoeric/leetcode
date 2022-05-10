@@ -820,6 +820,68 @@ class Solution:
         reverse(k, n-1)
 ```
 
+#### [83. 删除排序链表中的重复元素](https://leetcode.cn/problems/remove-duplicates-from-sorted-list/)
+
+<img src="figs/image-20220510102924944.png" alt="image-20220510102924944" style="zoom:67%;" />
+
+```python
+class Solution(object):
+    def deleteDuplicates(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        def helper(head):
+            if not head or not head.next:
+                return head
+            dummy = ListNode(0, head)
+            p = head
+            c = head.next
+            while c and p.val == c.val:
+                c = c.next
+                p = p.next
+            if dummy.next == p:
+                p.next = helper(c)
+            else:
+                dummy.next = p
+                p.next = helper(c)
+            return dummy.next
+        return helper(head)
+```
+
+
+
+#### [82. 删除排序链表中的重复元素 II](https://leetcode.cn/problems/remove-duplicates-from-sorted-list-ii/)
+
+![image-20220510102158300](figs/image-20220510102158300.png)
+
+```python
+class Solution(object):
+    def deleteDuplicates(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        def helper(head):
+            if not head or not head.next:
+                return head
+            dummy = ListNode(0, head)
+            p = head
+            c = head.next
+            while c and c.val == p.val:
+                c = c.next
+                p = p.next
+            if dummy.next == p:
+                p.next = helper(c)
+            else:
+                dummy.next = helper(c)
+                
+            return dummy.next
+        return helper(head)
+```
+
+
+
 #### [25. K 个一组翻转链表](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
 
 <img src="figs/image-20220421222411235.png" alt="image-20220421222411235" style="zoom:67%;" />
